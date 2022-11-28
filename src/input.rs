@@ -2,7 +2,7 @@ use std::io;
 use std::io::Write;
 
 pub fn string(title: &str, default_val: &str) -> String {
-    let mut input = String::from(default_val);
+    let mut input = String::new();
 
     print!("🍀 Enter {} ({}): ", title, default_val);
     io::stdout().flush().unwrap();
@@ -11,7 +11,13 @@ pub fn string(title: &str, default_val: &str) -> String {
         .read_line(&mut input)
         .expect(&("Error getting".to_owned() + title));
 
-    input.trim().to_string()
+    let input = input.trim().to_string();
+
+    if input.is_empty() {
+        default_val.to_string()
+    } else {
+        input
+    }
 }
 
 pub fn optional_string(title: &str, example: &str) -> Option<String> {

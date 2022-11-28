@@ -13,7 +13,7 @@ dependencies = [
 
 [[package]]
 name = "nativefier_tauri"
-version = "0.1.1"
+version = "0.1.2"
 dependencies = [
  "home",
 ]
