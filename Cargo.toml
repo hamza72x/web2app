@@ -1,6 +1,6 @@
 [package]
 name = "nativefier_tauri"
-description = "Create lightweight desktop applications of any website; but with Rust and Tauri."
+description = "Turn any web page into a desktop app (but, lightweight <2MB)"
 version = "0.1.3"
 edition = "2021"
 license = "MIT"
