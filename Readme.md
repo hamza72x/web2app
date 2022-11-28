@@ -1,6 +1,6 @@
 ### Intro
 
-Create lightweight desktop applications for any website with just one command; but with Rust and Tauri.
+Turn any web page into a desktop app (but, lightweight <2MB)
 
 - The bundle will be less than 2MB
 - Demo: [https://i.imgur.com/BLr03oF.mp4](https://i.imgur.com/BLr03oF.mp4)
