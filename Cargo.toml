@@ -3,6 +3,7 @@ name = "nativefier_tauri"
 description = "Create lightweight desktop applications for any website with just one command; but with Rust and Tauri"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
 
 [dependencies]
 home = "0.5.4"
