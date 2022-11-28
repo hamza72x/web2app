@@ -27,6 +27,7 @@ fn main() -> io::Result<()> {
         author: String::from("John Doe"),
         identifier: String::from("com.example.testapp"),
         icon: None,
+        isReleaseBuild: false,
     };
 
     data.name = input::string("Name", "TestApp");
@@ -39,6 +40,7 @@ fn main() -> io::Result<()> {
         "Icon",
         &format!("{}/{}/icon.png", util::get_home_dir(), "nativefier_tauri_apps"),
     );
+    data.isReleaseBuild = input::bool("Release build", false);
 
     // print given input
     data.print();
@@ -85,7 +87,11 @@ fn build(data: &model::Data) -> io::Result<()> {
     // run cargo bundle
     print_and_wait("\n🎉 Running cargo build...");
 
-    util::run_os_command("cargo bundle --release", Some(&data.build_dir())).unwrap();
+    let mut cargo_bundle = "cargo bundle";
+    if data.isReleaseBuild {
+        cargo_bundle = "cargo bundle --release";
+    }
+    util::run_os_command(cargo_bundle, Some(&data.build_dir())).unwrap();
 
     Ok(())
 }

@@ -6,6 +6,7 @@ pub struct Data {
     pub author: String,
     pub identifier: String,
     pub icon: Option<String>,
+    pub isReleaseBuild: bool,
 }
 
 // methods
@@ -31,7 +32,13 @@ impl Data {
     pub fn bundle_dir(&self) -> String {
         let build_dir = self.build_dir();
         let path = std::path::Path::new(&build_dir);
-        let path = path.join("target").join("release").join("bundle");
+
+        let mut build_type = "debug";
+        if self.isReleaseBuild {
+            build_type = "release";
+        }
+
+        let path = path.join("target").join(build_type).join("bundle");
         path.to_str().unwrap().to_string()
     }
 

@@ -20,6 +20,25 @@ pub fn string(title: &str, default_val: &str) -> String {
     }
 }
 
+pub fn bool(title: &str, default_val: bool) -> bool {
+    let mut input = String::new();
+
+    print!("🍀 Enter {} (y/n): ", title);
+    io::stdout().flush().unwrap();
+
+    io::stdin()
+        .read_line(&mut input)
+        .expect(&("Error getting".to_owned() + title));
+
+    let input = input.trim().to_string();
+
+    if input.is_empty() {
+        default_val
+    } else {
+        input == "y"
+    }
+}
+
 pub fn optional_string(title: &str, example: &str) -> Option<String> {
     let mut input = String::new();
 
