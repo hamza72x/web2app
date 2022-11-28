@@ -98,4 +98,11 @@ nisi ut aliquip ex ea commodo consequat.
 deb_depends = []
 osx_frameworks = []
 osx_url_schemes = []
+
+[profile.release]
+strip = true
+panic = "abort"
+codegen-units = 1
+lto = thin
+opt-level = "s"
 ";
