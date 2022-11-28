@@ -101,8 +101,8 @@ osx_url_schemes = []
 
 [profile.release]
 strip = true
-panic = "abort"
+panic = \"abort\"
 codegen-units = 1
-lto = thin
-opt-level = "s"
+lto = \"thin\"
+opt-level = \"s\"
 ";
