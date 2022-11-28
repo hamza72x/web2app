@@ -1,6 +1,9 @@
+### Intro
+
 Create lightweight desktop applications for any website with just one command; but with Rust and Tauri.
 
 - The bundle will be less than 2MB
+- Demo: [https://i.imgur.com/BLr03oF.mp4](https://i.imgur.com/BLr03oF.mp4)
 
 ### Install
 
