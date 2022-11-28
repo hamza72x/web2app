@@ -37,7 +37,7 @@ fn main() -> io::Result<()> {
     data.identifier = input::string("Identifier", "com.example.testapp");
     data.icon = input::optional_string(
         "Icon",
-        &format!("{}/{}/icon.png", util::get_home_dir(), "nativefier_tauri"),
+        &format!("{}/{}/icon.png", util::get_home_dir(), "nativefier_tauri_apps"),
     );
 
     // print given input

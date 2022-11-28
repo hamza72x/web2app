@@ -14,7 +14,7 @@ impl Data {
         let home_dir = home::home_dir().unwrap().display().to_string();
 
         let path = std::path::Path::new(&home_dir);
-        let path = path.join( "nativefier_tauri");
+        let path = path.join("nativefier_tauri_apps");
         let path = path.join(self.name.to_lowercase());
 
         path.as_path().display().to_string()
