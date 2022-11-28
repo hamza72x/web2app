@@ -20,7 +20,7 @@ nativefier_tauri
 # 🍀 Enter Version (0.1.0):
 # 🍀 Enter Author (John Doe):
 # 🍀 Enter Identifier (com.example.testapp):
-# 🍀 Enter Icon (/Users/nix/nativefier_tauri/icon.png): /Users/nix/nativefier_tauri/icon.png
+# 🍀 Enter Icon (/Users/user/nativefier_tauri/icon.png):
 ```
 
 ### Output
