@@ -23,12 +23,12 @@ nativefier_tauri
 # 🍀 Enter Version (0.1.0):
 # 🍀 Enter Author (John Doe):
 # 🍀 Enter Identifier (com.example.testapp):
-# 🍀 Enter Icon (/Users/user/nativefier_tauri/icon.png):
+# 🍀 Enter Icon (/Users/user/nativefier_tauri_apps/icon.png):
 ```
 
 ### Output
 
-- The output will be saved in `$HOME/nativefier_tauri/<name>` directory.
+- The output will be saved in `$HOME/nativefier_tauri_apps/<name>` directory.
 
 ### Libraries
 
