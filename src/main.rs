@@ -36,10 +36,7 @@ fn main() -> io::Result<()> {
     data.version = input::string("Version", "0.1.0");
     data.author = input::string("Author", "John Doe");
     data.identifier = input::string("Identifier", "com.example.testapp");
-    data.icon = input::optional_string(
-        "Icon",
-        &format!("{}/{}/icon.png", util::get_home_dir(), "nativefier_tauri_apps"),
-    );
+    data.icon = input::optional_string("Icon", "icon_path.png");
     data.isReleaseBuild = input::bool("Release build", false);
 
     // print given input
