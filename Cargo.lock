@@ -3,6 +3,12 @@
 version = 3
 
 [[package]]
+name = "base64"
+version = "0.20.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0ea22880d78093b0cbe17c89f64a7d457941e65759157ec6cb31a31d652b05e5"
+
+[[package]]
 name = "home"
 version = "0.5.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -15,6 +21,7 @@ dependencies = [
 name = "nativefier_tauri"
 version = "0.1.9"
 dependencies = [
+ "base64",
  "home",
 ]
 

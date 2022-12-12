@@ -66,3 +66,10 @@ pub fn re_create_dir(name: &str) -> io::Result<()> {
 
     fs::create_dir_all(dir)
 }
+
+// base64 decode
+// returns string
+pub fn decode_base64(data: &str) -> String {
+    let decoded = base64::decode(data).unwrap();
+    String::from_utf8(decoded).unwrap()
+}

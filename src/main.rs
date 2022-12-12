@@ -7,7 +7,7 @@ use std::time::Duration;
 
 mod input;
 mod model;
-mod template;
+mod generated;
 mod util;
 
 // milliseconds
@@ -27,7 +27,7 @@ fn main() -> io::Result<()> {
         author: String::from("John Doe"),
         identifier: String::from("com.example.testapp"),
         icon: None,
-        isReleaseBuild: false,
+        is_release_build: true,
     };
 
     data.name = input::string("Name", "TestApp");
@@ -37,7 +37,7 @@ fn main() -> io::Result<()> {
     data.author = input::string("Author", "John Doe");
     data.identifier = input::string("Identifier", "com.example.testapp");
     data.icon = input::optional_string("Icon", "icon_path.png");
-    data.isReleaseBuild = input::bool("Release build", false);
+    data.is_release_build = input::bool("Release build", true);
 
     // print given input
     data.print();
@@ -69,8 +69,11 @@ fn build(data: &model::Data) -> io::Result<()> {
 
     print_and_wait("\n🎉 Writing to files...");
 
-    cargo_toml.write_all(build_template(template::CARGO_TOML, &data).as_bytes()).unwrap();
-    main_rs.write_all(build_template(template::MAIN_RS, &data).as_bytes()).unwrap();
+    let template_main_rs = util::decode_base64(generated::MAIN_RS);
+    let template_cargo_toml = util::decode_base64(generated::CARGO_TOML);
+
+    main_rs.write_all(build_template(template_main_rs, &data).as_bytes()).unwrap();
+    cargo_toml.write_all(build_template(template_cargo_toml, &data).as_bytes()).unwrap();
 
     // build icons
     print_and_wait("\n🎉 Building icons...");
@@ -85,7 +88,7 @@ fn build(data: &model::Data) -> io::Result<()> {
     print_and_wait("\n🎉 Running cargo build...");
 
     let mut cargo_bundle = "cargo bundle";
-    if data.isReleaseBuild {
+    if data.is_release_build {
         cargo_bundle = "cargo bundle --release";
     }
     util::run_os_command(cargo_bundle, Some(&data.build_dir())).unwrap();
@@ -93,7 +96,7 @@ fn build(data: &model::Data) -> io::Result<()> {
     Ok(())
 }
 
-fn build_template(template: &str, data: &model::Data) -> String {
+fn build_template(template: String, data: &model::Data) -> String {
     let mut result = template.to_string();
 
     result = result.replace("%name%", &data.name);

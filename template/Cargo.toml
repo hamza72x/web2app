@@ -1,0 +1,36 @@
+[package]
+name = "%name_lower_cased%"
+description = "%description%"
+version = "%version%"
+edition = "2021"
+path = "src/main.rs"
+
+[dependencies]
+wry = "0.23.3"
+tao = "0.15.6"
+
+[package.metadata.bundle]
+name = "%name%"
+identifier = "%identifier%"
+icon = ["32x32.png", "128x128.png"]
+version = "%version%"
+resources = []
+copyright = "Copyright © %author%"
+category = "Developer Tool"
+short_description = "An example application."
+long_description = """
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna aliqua.  Ut
+enim ad minim veniam, quis nostrud exercitation ullamco laboris
+nisi ut aliquip ex ea commodo consequat.
+"""
+deb_depends = []
+osx_frameworks = []
+osx_url_schemes = []
+
+[profile.release]
+strip = true
+panic = "abort"
+codegen-units = 1
+lto = "thin"
+opt-level = "s"

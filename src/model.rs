@@ -6,7 +6,7 @@ pub struct Data {
     pub author: String,
     pub identifier: String,
     pub icon: Option<String>,
-    pub isReleaseBuild: bool,
+    pub is_release_build: bool,
 }
 
 // methods
@@ -34,7 +34,7 @@ impl Data {
         let path = std::path::Path::new(&build_dir);
 
         let mut build_type = "debug";
-        if self.isReleaseBuild {
+        if self.is_release_build {
             build_type = "release";
         }
 
