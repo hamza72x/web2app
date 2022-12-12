@@ -7,3 +7,4 @@ license = "MIT"
 
 [dependencies]
 home = "0.5.4"
+base64 = "0.20.0"
