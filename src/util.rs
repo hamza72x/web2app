@@ -5,10 +5,6 @@ use std::path;
 use std::fs;
 use std::process;
 
-pub fn get_home_dir() -> String {
-    home::home_dir().unwrap().display().to_string()
-}
-
 pub fn resize_icon(icon_path: &String, size: u8, new_path: String) -> io::Result<()> {
     let mut convert = process::Command::new("convert");
     convert.arg(icon_path);
