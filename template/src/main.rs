@@ -22,13 +22,14 @@ const JS_LOAD_SCRIPTS: &str = r#"
             console.log('Window is loaded');
             console.log('Loading DarkReader');
             var script = document.createElement('script');
-            script.src = 'https://unpkg.com/darkreader@4.9.58/darkreader.js';
+            script.src = 'https://cdn.jsdelivr.net/npm/darkreader@4.9.58/darkreader.min.js';
 
             script.onload = function() {
                 console.log('DarkReader is loaded');
                 // check localstorage for theme
                 var theme = localStorage.getItem('theme');
                 if (theme === 'dark') {
+                    DarkReader.setFetchMethod(window.fetch);
                     DarkReader.enable();
                 } else if (theme === 'light') {
                     DarkReader.disable();
@@ -61,6 +62,7 @@ const JS_DARK_THEME: &str = r#"
             console.log('DarkReader is not loaded');
             return;
         }
+        DarkReader.setFetchMethod(window.fetch);
         DarkReader.enable();
         localStorage.setItem('theme', 'dark');
     })();
