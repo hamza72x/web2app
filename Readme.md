@@ -11,6 +11,24 @@ Turn any web page into a desktop app (but, lightweight <1MB)
 - Dark Reader Extension (`Menu -> Theme`)
 - [Your suggestions are welcomed]
 
+### Requirements
+
+- [cargo](https://www.rust-lang.org/tools/install)
+
+```sh
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+- [imagemagick](https://github.com/imagemagick/imagemagick)
+
+```sh
+# macOS
+brew install imagemagick
+
+# apt
+sudo apt install imagemagick
+```
+
 ### Install
 
 ```sh
@@ -29,7 +47,7 @@ nativefier_tauri
 # 🍀 Enter Version (0.1.0):
 # 🍀 Enter Author (John Doe):
 # 🍀 Enter Identifier (com.example.testapp):
-# 🍀 Enter Icon (/Users/user/nativefier_tauri_apps/icon.png):
+# 🍀 Enter Icon (icon_path.png):
 ```
 
 ### Output
