@@ -2,7 +2,7 @@
 
 Turn any web page into a desktop app (but, lightweight <1MB)
 
-- The bundle will be less than 2MB
+- The bundle will be less than 1MB
 - Demo: [https://i.imgur.com/BLr03oF.mp4](https://i.imgur.com/BLr03oF.mp4)
 
 ### Install
