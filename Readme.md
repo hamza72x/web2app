@@ -29,6 +29,16 @@ brew install imagemagick
 sudo apt install imagemagick
 ```
 
+- Linux Specific
+
+```sh
+# arch
+sudo pacman -S webkit2gtk
+
+# debian
+sudo apt install -y webkit2gtk
+```
+
 ### Install
 
 ```sh
