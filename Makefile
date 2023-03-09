@@ -7,4 +7,7 @@ build_template:
 	echo "\npub const MAIN_RS: &str = \"$(shell cat template/src/main.rs | base64)\";" >> ${template_mod} && \
 	echo "\npub const CARGO_TOML: &str = \"$(shell cat template/Cargo.toml | base64)\";" >> ${template_mod}
 
-.PHONY: build_template
+run_template:
+	@cd template; cargo run
+
+.PHONY: build_template run_template

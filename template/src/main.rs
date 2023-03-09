@@ -14,6 +14,9 @@ use wry::{
 const MENU_ID_THEME_SYSTEM: MenuId = MenuId(4000);
 const MENU_ID_THEME_DARK: MenuId = MenuId(4001);
 const MENU_ID_THEME_LIGHT: MenuId = MenuId(4002);
+const MENU_ID_ZOOM_IN: MenuId = MenuId(4003);
+const MENU_ID_ZOOM_OUT: MenuId = MenuId(4004);
+
 
 const JS_LOAD_SCRIPTS: &str = r#"
     // load darkreader.js
@@ -84,20 +87,23 @@ fn main() -> wry::Result<()> {
     let event_loop = EventLoop::new();
 
     let window = WindowBuilder::new()
-        .with_title("%name%")
+        .with_title("app_name")
         .with_menu(build_menu())
         .build(&event_loop)?;
 
     let web_view = WebViewBuilder::new(window)?
         .with_devtools(true)
         .with_initialization_script(JS_LOAD_SCRIPTS)
-        .with_url("%url%")?
+        .with_url("https://www.notion.so")?
         .build()?;
 
     return run_event_loop(event_loop, web_view);
 }
 
 fn run_event_loop(event_loop: EventLoop<()>, web_view: webview::WebView) -> wry::Result<()> {
+
+    let mut scale_factor = web_view.window().scale_factor();
+
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Wait;
 
@@ -115,6 +121,14 @@ fn run_event_loop(event_loop: EventLoop<()>, web_view: webview::WebView) -> wry:
                     MENU_ID_THEME_DARK => web_view.evaluate_script(JS_DARK_THEME).unwrap(),
                     MENU_ID_THEME_LIGHT => web_view.evaluate_script(JS_LIGHT_THEME).unwrap(),
                     MENU_ID_THEME_SYSTEM => web_view.evaluate_script(JS_SYSTEM_THEME).unwrap(),
+                    MENU_ID_ZOOM_IN => {
+                        web_view.zoom(scale_factor + 0.01);
+                        scale_factor = web_view.window().scale_factor();
+                    }
+                    MENU_ID_ZOOM_OUT => {
+                        web_view.zoom(scale_factor - 0.01);
+                        scale_factor = web_view.window().scale_factor();
+                    }
                     _ => (),
                 }
             }
@@ -140,7 +154,8 @@ fn build_menu() -> MenuBar {
     edit_menu.add_native_item(MenuItem::Undo);
     edit_menu.add_native_item(MenuItem::Redo);
 
-    window_menu.add_native_item(MenuItem::Minimize);
+    window_menu.add_item(MenuItemAttributes::new("Zoom In").with_id(MENU_ID_ZOOM_IN));
+    window_menu.add_item(MenuItemAttributes::new("Zoom Out").with_id(MENU_ID_ZOOM_OUT));
 
     theme_menu.add_item(MenuItemAttributes::new("System").with_id(MENU_ID_THEME_SYSTEM));
     theme_menu.add_item(MenuItemAttributes::new("Dark").with_id(MENU_ID_THEME_DARK));

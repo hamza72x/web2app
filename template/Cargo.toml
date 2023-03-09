@@ -1,7 +1,7 @@
 [package]
-name = "%name_lower_cased%"
-description = "%description%"
-version = "%version%"
+name = "app_name"
+description = "test_description"
+version = "0.1.0"
 edition = "2021"
 path = "src/main.rs"
 
@@ -10,12 +10,12 @@ wry = "0.23.3"
 tao = "0.15.6"
 
 [package.metadata.bundle]
-name = "%name%"
-identifier = "%identifier%"
+name = "AppName"
+identifier = "com.example.test"
 icon = ["32x32.png", "128x128.png"]
-version = "%version%"
+version = "0.1.0"
 resources = []
-copyright = "Copyright © %author%"
+copyright = "Copyright © author_name"
 category = "Developer Tool"
 short_description = "An example application."
 long_description = """
