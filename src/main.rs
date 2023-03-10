@@ -19,9 +19,6 @@ const ICON_SIZE_1: u8 = 32;
 const ICON_SIZE_2: u8 = 128;
 
 fn main() -> io::Result<()> {
-    // panics if fails
-    check_pre_requisites();
-
     let cli = model::Cli::parse();
     let data: model::AppData;
 
@@ -37,6 +34,9 @@ fn main() -> io::Result<()> {
             return Err(io::Error::new(io::ErrorKind::Other, "No command given."));
         }
     }
+
+    // panics if fails
+    check_pre_requisites();
 
     // print given input
     data.print();
