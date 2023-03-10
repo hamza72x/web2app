@@ -10,4 +10,7 @@ build_template:
 run_template:
 	@cd template; cargo run
 
-.PHONY: build_template run_template
+run:
+	@cargo build && ./target/debug/nativefier_tauri
+
+.PHONY: build_template run_template run
