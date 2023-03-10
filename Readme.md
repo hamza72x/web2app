@@ -49,12 +49,15 @@ cargo install nativefier_tauri
 
 ```sh
 # Run with args
+
 nativefier_tauri args -n Notion -u https://www.notion.so -i icon.png
 ```
 
 ```sh
 # Run with interactive mode
+
 nativefier_tauri interactive
+
 # 🍀 Enter Name (TestApp):
 # 🍀 Enter URL (https://trello.com):
 # 🍀 Enter Description (An example application.):
