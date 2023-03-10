@@ -8,3 +8,4 @@ license = "MIT"
 [dependencies]
 home = "0.5.4"
 base64 = "0.20.0"
+clap = { version = "4.1.1", features = ["derive"]}

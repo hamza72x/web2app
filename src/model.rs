@@ -1,16 +1,46 @@
-pub struct Data {
+use clap::{Parser, Subcommand};
+
+#[derive(Parser)]
+#[command(author, version, about, long_about = None)]
+struct Cli {
+    #[command(subcommand)]
+    command: Option<Commands>,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    Args(AppData),
+}
+
+#[derive(Parser)]
+pub struct AppData {
+    #[arg(short, long, help = "The name of the app", default_value_t = String::from("TestApp"))]
     pub name: String,
+
+    #[arg(short, long, help = "The URL of the app", default_value_t = String::from("https://trello.com"))]
     pub url: String,
+
+    #[arg(short, long, help = "The description of the app", default_value_t = String::from("An example application."))]
     pub description: String,
+
+    #[arg(short, long, help = "The version of the app", default_value_t = String::from("0.1.0"))]
     pub version: String,
+
+    #[arg(short, long, help = "The author of the app", default_value_t = String::from("John Doe"))]
     pub author: String,
+
+    #[arg(short, long, help = "The identifier of the app", default_value_t = String::from("com.example.testapp"))]
     pub identifier: String,
+
+    #[arg(short, long, help = "The icon of the app")]
     pub icon: Option<String>,
+
+    #[arg(short, long, help = "The release build of the app", default_value_t = true)]
     pub is_release_build: bool,
 }
 
 // methods
-impl Data {
+impl AppData {
     pub fn build_dir(&self) -> String {
         let home_dir = home::home_dir().unwrap().display().to_string();
 
@@ -65,6 +95,4 @@ impl Data {
         println!("");
         println!("🚀 build_dir: {}", self.build_dir());
     }
-
 }
-

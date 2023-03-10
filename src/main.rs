@@ -19,9 +19,9 @@ fn main() -> io::Result<()> {
     // panics if fails
     check_pre_requisites();
 
-    let mut data: model::Data = model::Data {
+    let mut data: model::AppData = model::AppData {
         name: String::from("TestApp"),
-        url: String::from("https://trello.com"),
+        url: String::from("https://notion.so"),
         description: String::from("An example application."),
         version: String::from("0.1.0"),
         author: String::from("John Doe"),
@@ -54,7 +54,7 @@ fn main() -> io::Result<()> {
 }
 
 // build the app
-fn build(data: &model::Data) -> io::Result<()> {
+fn build(data: &model::AppData) -> io::Result<()> {
     // build directories
     print_and_wait("\n🎉 Building directories...");
 
@@ -96,7 +96,7 @@ fn build(data: &model::Data) -> io::Result<()> {
     Ok(())
 }
 
-fn build_template(template: String, data: &model::Data) -> String {
+fn build_template(template: String, data: &model::AppData) -> String {
     let mut result = template.to_string();
 
     result = result.replace("%name%", &data.name);
