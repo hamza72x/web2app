@@ -95,7 +95,7 @@ impl AppData {
         println!("🚀 version: {}", self.version);
         println!("🚀 author: {}", self.author);
         println!("🚀 identifier: {}", self.identifier);
-        println!("🚀 icon: {:?}", self.icon);
+        println!("🚀 icon: {}", self.icon.as_ref().unwrap_or(&String::from("None")));
         println!("");
         println!("🚀 build_dir: {}", self.build_dir());
     }
