@@ -47,7 +47,7 @@ cargo install nativefier_tauri
 
 ### Usages 
 
-```sh
+```bash
 # help
 nativefier_tauri -h
 # Usage: nativefier_tauri [COMMAND]
