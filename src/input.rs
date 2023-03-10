@@ -20,6 +20,25 @@ pub fn string(title: &str, default_val: &str) -> String {
     }
 }
 
+pub fn string_must(title: &str) -> String {
+    let mut input = String::new();
+
+    print!("🍀 Enter {} (required): ", title);
+    io::stdout().flush().unwrap();
+
+    io::stdin()
+        .read_line(&mut input)
+        .expect(&("Error getting".to_owned() + title));
+
+    let text = input.trim().to_string();
+
+    if text.is_empty() {
+        string_must(title)
+    } else {
+        text
+    }
+}
+
 pub fn bool(title: &str, default_val: bool) -> bool {
     let mut input = String::new();
 

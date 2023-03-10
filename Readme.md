@@ -45,11 +45,42 @@ sudo apt install -y webkit2gtk
 cargo install nativefier_tauri
 ```
 
-### Run 
+### Usages 
 
 ```sh
-# Run
-nativefier_tauri
+# help
+nativefier_tauri -h
+# Usage: nativefier_tauri [COMMAND]
+# 
+# Commands:
+#   args         Builds the app with the given arguments.
+#   interactive  Builds the app with interactive input.
+#   help         Print this message or the help of the given subcommand(s)
+# 
+# Options:
+#   -h, --help     Print help
+#   -V, --version  Print version
+
+nativefier_tauri args -h
+
+# Usage: nativefier_tauri args [OPTIONS] --name <NAME> --url <URL>
+#
+# Options:
+#   -n, --name <NAME>                The name of the app
+#   -u, --url <URL>                  The URL of the app
+#   -d, --description <DESCRIPTION>  The description of the app [default: "An example application."]
+#   -v, --version <VERSION>          The version of the app [default: 0.1.0]
+#   -a, --author <AUTHOR>            The author of the app [default: "John Doe"]
+#   -t, --identifier <IDENTIFIER>    The identifier of the app [default: com.example.testapp]
+#   -i, --icon <ICON>                The icon of the app
+#   -r, --release-build              The release build of the app
+#   -h, --help                       Print help
+
+# Run with args
+nativefier_tauri args -n Notion -u https://www.notion.so -i icon.png
+
+# Run with interactive mode
+nativefier_tauri interactive
 
 # 🍀 Enter Name (TestApp):
 # 🍀 Enter URL (https://trello.com):
