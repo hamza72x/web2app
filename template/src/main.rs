@@ -1,4 +1,8 @@
-use tao::menu::{MenuId, MenuItem, MenuItemAttributes};
+use tao::{
+    accelerator::{Accelerator, SysMods},
+    keyboard::KeyCode,
+    menu::{MenuId, MenuItem, MenuItemAttributes},
+};
 
 use wry::{
     application::{
@@ -11,11 +15,14 @@ use wry::{
     webview::WebViewBuilder,
 };
 
+// menu id with enum, but integer
 const MENU_ID_THEME_SYSTEM: MenuId = MenuId(4000);
 const MENU_ID_THEME_DARK: MenuId = MenuId(4001);
 const MENU_ID_THEME_LIGHT: MenuId = MenuId(4002);
 const MENU_ID_ZOOM_IN: MenuId = MenuId(4003);
 const MENU_ID_ZOOM_OUT: MenuId = MenuId(4004);
+const MENU_ID_RELOAD: MenuId = MenuId(4005);
+
 const SCALE_FACTOR: f64 = 1.1;
 
 const JS_LOAD_SCRIPTS: &str = r#"
@@ -100,6 +107,56 @@ fn main() -> wry::Result<()> {
     return run_event_loop(event_loop, web_view);
 }
 
+fn build_menu() -> MenuBar {
+    let mut menu_bar = MenuBar::new();
+
+    let mut file_menu = MenuBar::new();
+    let mut edit_menu = MenuBar::new();
+    let mut window_menu = MenuBar::new();
+    let mut theme_menu = MenuBar::new();
+
+    file_menu.add_native_item(MenuItem::Quit);
+
+    edit_menu.add_native_item(MenuItem::Copy);
+    edit_menu.add_native_item(MenuItem::Cut);
+    edit_menu.add_native_item(MenuItem::Paste);
+    edit_menu.add_native_item(MenuItem::SelectAll);
+    edit_menu.add_native_item(MenuItem::Undo);
+    edit_menu.add_native_item(MenuItem::Redo);
+
+    window_menu.add_native_item(MenuItem::Minimize);
+
+    // zoom
+    window_menu.add_item(
+        MenuItemAttributes::new("Zoom In")
+            .with_id(MENU_ID_ZOOM_IN)
+            .with_accelerators(&Accelerator::new(SysMods::Cmd, KeyCode::Plus)),
+    );
+    window_menu.add_item(
+        MenuItemAttributes::new("Zoom Out")
+            .with_id(MENU_ID_ZOOM_OUT)
+            .with_accelerators(&Accelerator::new(SysMods::Cmd, KeyCode::Minus)),
+    );
+
+    // reload
+    window_menu.add_item(
+        MenuItemAttributes::new("Reload")
+            .with_id(MENU_ID_RELOAD)
+            .with_accelerators(&Accelerator::new(SysMods::Cmd, KeyCode::KeyR)),
+    );
+
+    theme_menu.add_item(MenuItemAttributes::new("System").with_id(MENU_ID_THEME_SYSTEM));
+    theme_menu.add_item(MenuItemAttributes::new("Dark").with_id(MENU_ID_THEME_DARK));
+    theme_menu.add_item(MenuItemAttributes::new("Light").with_id(MENU_ID_THEME_LIGHT));
+
+    menu_bar.add_submenu("File", true, file_menu);
+    menu_bar.add_submenu("Edit", true, edit_menu);
+    menu_bar.add_submenu("Window", true, window_menu);
+    menu_bar.add_submenu("Theme", true, theme_menu);
+
+    menu_bar
+}
+
 fn run_event_loop(event_loop: EventLoop<()>, web_view: webview::WebView) -> wry::Result<()> {
     let mut current_scale = web_view.window().scale_factor();
 
@@ -121,7 +178,7 @@ fn run_event_loop(event_loop: EventLoop<()>, web_view: webview::WebView) -> wry:
                     MENU_ID_THEME_LIGHT => web_view.evaluate_script(JS_LIGHT_THEME).unwrap(),
                     MENU_ID_THEME_SYSTEM => web_view.evaluate_script(JS_SYSTEM_THEME).unwrap(),
                     MENU_ID_ZOOM_IN => {
-                        if current_scale < 3.0 {
+                        if current_scale < 2.0 {
                             current_scale = current_scale * SCALE_FACTOR;
                             web_view.zoom(current_scale);
                         }
@@ -132,43 +189,13 @@ fn run_event_loop(event_loop: EventLoop<()>, web_view: webview::WebView) -> wry:
                             web_view.zoom(current_scale);
                         }
                     }
+                    MENU_ID_RELOAD => {
+                        web_view.load_url(web_view.url().as_str());
+                    }
                     _ => (),
                 }
             }
             _ => (),
         }
     });
-}
-
-fn build_menu() -> MenuBar {
-    let mut menu_bar = MenuBar::new();
-
-    let mut file_menu = MenuBar::new();
-    let mut edit_menu = MenuBar::new();
-    let mut window_menu = MenuBar::new();
-    let mut theme_menu = MenuBar::new();
-
-    file_menu.add_native_item(MenuItem::Quit);
-
-    edit_menu.add_native_item(MenuItem::Copy);
-    edit_menu.add_native_item(MenuItem::Cut);
-    edit_menu.add_native_item(MenuItem::Paste);
-    edit_menu.add_native_item(MenuItem::SelectAll);
-    edit_menu.add_native_item(MenuItem::Undo);
-    edit_menu.add_native_item(MenuItem::Redo);
-
-    window_menu.add_native_item(MenuItem::Minimize);
-    window_menu.add_item(MenuItemAttributes::new("Zoom In").with_id(MENU_ID_ZOOM_IN));
-    window_menu.add_item(MenuItemAttributes::new("Zoom Out").with_id(MENU_ID_ZOOM_OUT));
-
-    theme_menu.add_item(MenuItemAttributes::new("System").with_id(MENU_ID_THEME_SYSTEM));
-    theme_menu.add_item(MenuItemAttributes::new("Dark").with_id(MENU_ID_THEME_DARK));
-    theme_menu.add_item(MenuItemAttributes::new("Light").with_id(MENU_ID_THEME_LIGHT));
-
-    menu_bar.add_submenu("File", true, file_menu);
-    menu_bar.add_submenu("Edit", true, edit_menu);
-    menu_bar.add_submenu("Window", true, window_menu);
-    menu_bar.add_submenu("Theme", true, theme_menu);
-
-    menu_bar
 }
