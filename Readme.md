@@ -65,6 +65,7 @@ nativefier_tauri interactive
 # 🍀 Enter Author (John Doe):
 # 🍀 Enter Identifier (com.example.testapp):
 # 🍀 Enter Icon (icon_path.png):
+# 🍀 Enter User Agent (Mozilla/5.0):
 ```
 
 ### Output
@@ -77,7 +78,7 @@ nativefier_tauri interactive
 - [x] Reload
 - [x] Standard Copy/Paste
 - [ ] Dark Reader Extension (already there but, not fully working)
-- [ ] Custom User Agent
+- [x] Custom User Agent
 - [ ] Custom url navigation
 - [ ] Github Action to build binary
 - [ ] Separate `native_tauri_apps` repo to host common built apps through Github Action
