@@ -30,7 +30,7 @@ fn main() -> io::Result<()> {
             data = arg_data;
         }
         Some(Commands::Interactive) => {
-            data = get_interactive_data();
+            data = get_interactive_args();
         }
         None => {
             println!("No command given. Use --help for more information.");
@@ -55,30 +55,18 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-fn get_interactive_data() -> Args {
-    let mut data: Args = Args {
-        name: String::from("TestApp"),
-        url: String::from("https://notion.so"),
-        description: String::from("An example application."),
-        version: String::from("0.1.0"),
-        author: String::from("John Doe"),
-        identifier: String::from("com.example.testapp"),
-        icon: None,
-        is_release_build: true,
-        user_agent: None,
+fn get_interactive_args() -> Args {
+    return Args {
+        name: input::string_must("Name"),
+        url: input::string_must("URL"),
+        description: input::string("Description", "An example application."),
+        version: input::string("Version", "0.1.0"),
+        author: input::string("Author", "hamza72x"),
+        identifier: input::string("Identifier", "com.example.testapp"),
+        icon: input::optional_string("Icon", "icon_path.png"),
+        is_release_build: input::bool("Release build", true),
+        user_agent: input::optional_string("User agent", "Mozilla/5.0"),
     };
-
-    data.name = input::string_must("Name");
-    data.url = input::string_must("URL");
-    data.description = input::string("Description", "An example application.");
-    data.version = input::string("Version", "0.1.0");
-    data.author = input::string("Author", "John Doe");
-    data.identifier = input::string("Identifier", "com.example.testapp");
-    data.icon = input::optional_string("Icon", "icon_path.png");
-    data.is_release_build = input::bool("Release build", true);
-    data.user_agent = input::optional_string("User agent", "Mozilla/5.0");
-
-    return data;
 }
 
 // build the app
