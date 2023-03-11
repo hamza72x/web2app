@@ -131,6 +131,7 @@ fn build_template(template: String, data: &model::AppData) -> String {
     result = result.replace("with_url(\"https://www.notion.so\")", &format!("with_url(\"{}\")", &data.url));
     result = result.replace("with_title(\"app_name\")", &format!("with_title(\"{}\")", &data.name));
     result = result.replace("description = \"app_description\"", &format!("description = \"{}\"", &data.description));
+    result = result.replace("join(\"app_name\")", &format!("join(\"{}\")", &data.name.to_lowercase()));
     result = result.replace("version = \"0.1.0\"", &format!("version = \"{}\"", &data.version));
     result = result.replace("copyright = \"Copyright © author_name\", ", &format!("copyright = \"Copyright © {}\", ", &data.author));
     result = result.replace("identifier = \"com.example.test\"", &format!("identifier = \"{}\"", &data.identifier));

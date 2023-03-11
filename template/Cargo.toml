@@ -8,6 +8,9 @@ path = "src/main.rs"
 [dependencies]
 wry = "0.23.3"
 tao = "0.15.6"
+home = "0.5.4"
+serde_json = "1.0.94"
+serde = "1.0.154"
 
 [package.metadata.bundle]
 name = "AppName"
