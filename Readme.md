@@ -5,12 +5,6 @@ Turn any web page into a desktop app (but, lightweight <1MB)
 - The bundle will be less than 1MB
 - Demo: [https://i.imgur.com/BLr03oF.mp4](https://i.imgur.com/BLr03oF.mp4)
 
-### Features
-
-- General Keyboard Shortcuts
-- Dark Reader Extension (`Menu -> Theme`)
-- [Your suggestions are welcomed]
-
 ### Requirements
 
 - [cargo](https://www.rust-lang.org/tools/install)
