@@ -71,6 +71,21 @@ nativefier_tauri interactive
 
 - The output will be saved in `$HOME/nativefier_tauri_apps/<name>` directory.
 
+### Roadmap
+
+- [x] Zoom In/Out
+- [x] Reload
+- [x] Standard Copy/Paste
+- [ ] Dark Reader Extension (already there but, not fully working)
+- [ ] Custom User Agent
+- [ ] Custom url navigation
+- [ ] Github Action to build binary
+- [ ] Separate `native_tauri_apps` repo to host common built apps through Github Action
+- [ ] Retain window size and position after restart
+- [ ] File download support
+- [ ] Automatically fetch icon from website
+- [ ] Docs in crates.io
+
 ### Libraries
 
 - [Tauri](https://github.com/tauri-apps/tauri)
