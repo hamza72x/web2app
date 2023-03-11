@@ -1,4 +1,7 @@
+use std::collections::HashMap;
 use std::fs;
+use std::fs::canonicalize;
+use std::fs::File;
 use std::io;
 use std::io::Write;
 use std::path;
@@ -13,20 +16,25 @@ mod input;
 mod model;
 mod util;
 
+use model::AppData;
+use model::Cli;
+use model::Commands;
+use model::FileBuildData;
+
 // milliseconds
 const SLEEP_TIME: u64 = 10;
 const ICON_SIZE_1: u8 = 32;
 const ICON_SIZE_2: u8 = 128;
 
 fn main() -> io::Result<()> {
-    let cli = model::Cli::parse();
-    let data: model::AppData;
+    let cli = Cli::parse();
+    let data: AppData;
 
     match cli.command {
-        Some(model::Commands::Args(arg_data)) => {
+        Some(Commands::Args(arg_data)) => {
             data = arg_data;
         }
-        Some(model::Commands::Interactive) => {
+        Some(Commands::Interactive) => {
             data = get_interactive_data();
         }
         None => {
@@ -52,8 +60,8 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-fn get_interactive_data() -> model::AppData {
-    let mut data: model::AppData = model::AppData {
+fn get_interactive_data() -> AppData {
+    let mut data: AppData = AppData {
         name: String::from("TestApp"),
         url: String::from("https://notion.so"),
         description: String::from("An example application."),
@@ -77,67 +85,90 @@ fn get_interactive_data() -> model::AppData {
 }
 
 // build the app
-fn build(data: &model::AppData) -> io::Result<()> {
+fn build(app_data: &AppData) -> io::Result<()> {
     // build directories
     print_and_wait("\n🎉 Building directories...");
 
-    fs::create_dir_all(&data.build_dir())?;
-    util::re_create_dir(&data.src_dir())?;
+    // $HOME/nativefier_tauri_apps/app_name
+    fs::create_dir_all(&app_data.build_dir())?;
+
+    // $HOME/nativefier_tauri_apps/app_name/src
+    util::re_create_dir(format!("{}/src", &app_data.build_dir()).as_str())?;
 
     // create files
     print_and_wait("\n🎉 Creating files...");
 
-    let mut cargo_toml = fs::File::create(&path::PathBuf::from(&data.cargo_toml_path())).unwrap();
-    let mut main_rs = fs::File::create(&path::PathBuf::from(&data.main_rs_path())).unwrap();
+    // array of FileBuildData
+    let mut files = [
+        // Cargo.toml
+        FileBuildData {
+            file: app_data.dest_tmpl_file("Cargo.toml"),
+            data_b64: generated::CARGO_TOML,
+        },
+        // Cargo.lock
+        FileBuildData {
+            file: app_data.dest_tmpl_file("Cargo.lock"),
+            data_b64: generated::CARGO_LOCK,
+        },
+        // main.rs
+        FileBuildData {
+            file: app_data.dest_tmpl_file("src/main.rs"),
+            data_b64: generated::MAIN_RS,
+        },
+        // app_config.rs
+        FileBuildData {
+            file: app_data.dest_tmpl_file("src/app_config.rs"),
+            data_b64: generated::APP_CONFIG,
+        },
+        // app_menu.rs
+        FileBuildData {
+            file: app_data.dest_tmpl_file("src/app_menu.rs"),
+            data_b64: generated::APP_MENU,
+        },
+    ];
+
+    // write files
+    for file in files.iter_mut() {
+        file.decode_and_write(&app_data);
+    }
+
+    // let mut cargo_toml = File::create(&path::PathBuf::from(&data.cargo_toml_path())).unwrap();
+    // let mut main_rs = File::create(&path::PathBuf::from(&data.main_rs_path())).unwrap();
 
     print_and_wait("\n🎉 Writing to files...");
 
-    let template_main_rs = util::decode_base64(generated::MAIN_RS);
-    let template_cargo_toml = util::decode_base64(generated::CARGO_TOML);
+    // let template_main_rs = util::decode_base64(generated::MAIN_RS);
+    // let template_cargo_toml = util::decode_base64(generated::CARGO_TOML);
 
-    main_rs
-        .write_all(build_template(template_main_rs, &data).as_bytes())
-        .unwrap();
-    cargo_toml
-        .write_all(build_template(template_cargo_toml, &data).as_bytes())
-        .unwrap();
+    // main_rs
+    //     .write_all(build_template(template_main_rs, &data).as_bytes())
+    //     .unwrap();
+    // cargo_toml
+    //     .write_all(build_template(template_cargo_toml, &data).as_bytes())
+    //     .unwrap();
 
-    // build icons
-    print_and_wait("\n🎉 Building icons...");
+    // // build icons
+    // print_and_wait("\n🎉 Building icons...");
 
-    if data.icon.is_some() {
-        let source_icon = data.icon.as_ref().unwrap();
-        util::resize_icon(&source_icon, ICON_SIZE_1, data.icon_path(ICON_SIZE_1)).unwrap();
-        util::resize_icon(&source_icon, ICON_SIZE_2, data.icon_path(ICON_SIZE_2)).unwrap();
-    }
+    // if data.icon.is_some() {
+    //     let source_icon = data.icon.as_ref().unwrap();
+    //     util::resize_icon(&source_icon, ICON_SIZE_1, data.icon_path(ICON_SIZE_1)).unwrap();
+    //     util::resize_icon(&source_icon, ICON_SIZE_2, data.icon_path(ICON_SIZE_2)).unwrap();
+    // }
 
-    // run cargo bundle
-    print_and_wait("\n🎉 Running cargo build...");
+    // // run cargo bundle
+    // print_and_wait("\n🎉 Running cargo build...");
 
-    let mut cargo_bundle = "cargo bundle";
-    if data.release_build {
-        cargo_bundle = "cargo bundle --release";
-    }
-    util::run_os_command(cargo_bundle, Some(&data.build_dir())).unwrap();
+    // let mut cargo_bundle = "cargo bundle";
+    // if data.release_build {
+    //     cargo_bundle = "cargo bundle --release";
+    // }
+    // util::run_os_command(cargo_bundle, Some(&data.build_dir())).unwrap();
 
     Ok(())
 }
 
-fn build_template(template: String, data: &model::AppData) -> String {
-    let mut result = template.to_string();
 
-    result = result.replace("name = \"app_name_lowercased\"", &format!("name = \"{}\"", &data.name.to_lowercase()));
-    result = result.replace("name = \"AppName\"", &format!("name = \"{}\"", &data.name));
-    result = result.replace("with_url(\"https://www.notion.so\")", &format!("with_url(\"{}\")", &data.url));
-    result = result.replace("with_title(\"app_name\")", &format!("with_title(\"{}\")", &data.name));
-    result = result.replace("description = \"app_description\"", &format!("description = \"{}\"", &data.description));
-    result = result.replace("join(\"app_name\")", &format!("join(\"{}\")", &data.name.to_lowercase()));
-    result = result.replace("version = \"0.1.0\"", &format!("version = \"{}\"", &data.version));
-    result = result.replace("copyright = \"Copyright © author_name\", ", &format!("copyright = \"Copyright © {}\", ", &data.author));
-    result = result.replace("identifier = \"com.example.test\"", &format!("identifier = \"{}\"", &data.identifier));
-
-    result
-}
 
 // panics if fails
 fn check_pre_requisites() {
