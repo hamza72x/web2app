@@ -1,10 +1,5 @@
-use std::collections::HashMap;
 use std::fs;
-use std::fs::canonicalize;
-use std::fs::File;
 use std::io;
-use std::io::Write;
-use std::path;
 use std::process::exit;
 use std::thread::sleep;
 use std::time::Duration;
@@ -16,7 +11,7 @@ mod input;
 mod model;
 mod util;
 
-use model::AppData;
+use model::Args;
 use model::Cli;
 use model::Commands;
 use model::FileBuildData;
@@ -28,7 +23,7 @@ const ICON_SIZE_2: u8 = 128;
 
 fn main() -> io::Result<()> {
     let cli = Cli::parse();
-    let data: AppData;
+    let data: Args;
 
     match cli.command {
         Some(Commands::Args(arg_data)) => {
@@ -60,8 +55,8 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-fn get_interactive_data() -> AppData {
-    let mut data: AppData = AppData {
+fn get_interactive_data() -> Args {
+    let mut data: Args = Args {
         name: String::from("TestApp"),
         url: String::from("https://notion.so"),
         description: String::from("An example application."),
@@ -69,7 +64,8 @@ fn get_interactive_data() -> AppData {
         author: String::from("John Doe"),
         identifier: String::from("com.example.testapp"),
         icon: None,
-        release_build: true,
+        is_release_build: true,
+        user_agent: None,
     };
 
     data.name = input::string_must("Name");
@@ -79,21 +75,21 @@ fn get_interactive_data() -> AppData {
     data.author = input::string("Author", "John Doe");
     data.identifier = input::string("Identifier", "com.example.testapp");
     data.icon = input::optional_string("Icon", "icon_path.png");
-    data.release_build = input::bool("Release build", true);
+    data.is_release_build = input::bool("Release build", true);
 
     return data;
 }
 
 // build the app
-fn build(app_data: &AppData) -> io::Result<()> {
+fn build(args: &Args) -> io::Result<()> {
     // build directories
     print_and_wait("\n🎉 Building directories...");
 
     // $HOME/nativefier_tauri_apps/app_name
-    fs::create_dir_all(&app_data.build_dir())?;
+    fs::create_dir_all(&args.build_dir())?;
 
     // $HOME/nativefier_tauri_apps/app_name/src
-    util::re_create_dir(format!("{}/src", &app_data.build_dir()).as_str())?;
+    util::re_create_dir(format!("{}/src", &args.build_dir()).as_str())?;
 
     // create files
     print_and_wait("\n🎉 Creating files...");
@@ -102,68 +98,61 @@ fn build(app_data: &AppData) -> io::Result<()> {
     let mut files = [
         // Cargo.toml
         FileBuildData {
-            file: app_data.dest_tmpl_file("Cargo.toml"),
+            file: args.dest_tmpl_file("Cargo.toml"),
             data_b64: generated::CARGO_TOML,
+            is_text_replace_needed: true,
         },
         // Cargo.lock
         FileBuildData {
-            file: app_data.dest_tmpl_file("Cargo.lock"),
+            file: args.dest_tmpl_file("Cargo.lock"),
             data_b64: generated::CARGO_LOCK,
+            is_text_replace_needed: true,
         },
         // main.rs
         FileBuildData {
-            file: app_data.dest_tmpl_file("src/main.rs"),
+            file: args.dest_tmpl_file("src/main.rs"),
             data_b64: generated::MAIN_RS,
+            is_text_replace_needed: true,
         },
         // app_config.rs
         FileBuildData {
-            file: app_data.dest_tmpl_file("src/app_config.rs"),
+            file: args.dest_tmpl_file("src/app_config.rs"),
             data_b64: generated::APP_CONFIG,
+            is_text_replace_needed: true,
         },
         // app_menu.rs
         FileBuildData {
-            file: app_data.dest_tmpl_file("src/app_menu.rs"),
+            file: args.dest_tmpl_file("src/app_menu.rs"),
             data_b64: generated::APP_MENU,
+            is_text_replace_needed: true,
         },
     ];
 
+    print_and_wait("\n🎉 Building templates...");
+    
     // write files
     for file in files.iter_mut() {
-        file.decode_and_write(&app_data);
+        file.decode_and_write(&args);
     }
 
-    // let mut cargo_toml = File::create(&path::PathBuf::from(&data.cargo_toml_path())).unwrap();
-    // let mut main_rs = File::create(&path::PathBuf::from(&data.main_rs_path())).unwrap();
 
-    print_and_wait("\n🎉 Writing to files...");
+    // build icons
+    print_and_wait("\n🎉 Building icons...");
 
-    // let template_main_rs = util::decode_base64(generated::MAIN_RS);
-    // let template_cargo_toml = util::decode_base64(generated::CARGO_TOML);
+    if args.icon.is_some() {
+        let source_icon = args.icon.as_ref().unwrap();
+        util::resize_icon(&source_icon, ICON_SIZE_1, args.icon_path(ICON_SIZE_1)).unwrap();
+        util::resize_icon(&source_icon, ICON_SIZE_2, args.icon_path(ICON_SIZE_2)).unwrap();
+    }
 
-    // main_rs
-    //     .write_all(build_template(template_main_rs, &data).as_bytes())
-    //     .unwrap();
-    // cargo_toml
-    //     .write_all(build_template(template_cargo_toml, &data).as_bytes())
-    //     .unwrap();
+    // run cargo bundle
+    print_and_wait("\n🎉 Running cargo build...");
 
-    // // build icons
-    // print_and_wait("\n🎉 Building icons...");
-
-    // if data.icon.is_some() {
-    //     let source_icon = data.icon.as_ref().unwrap();
-    //     util::resize_icon(&source_icon, ICON_SIZE_1, data.icon_path(ICON_SIZE_1)).unwrap();
-    //     util::resize_icon(&source_icon, ICON_SIZE_2, data.icon_path(ICON_SIZE_2)).unwrap();
-    // }
-
-    // // run cargo bundle
-    // print_and_wait("\n🎉 Running cargo build...");
-
-    // let mut cargo_bundle = "cargo bundle";
-    // if data.release_build {
-    //     cargo_bundle = "cargo bundle --release";
-    // }
-    // util::run_os_command(cargo_bundle, Some(&data.build_dir())).unwrap();
+    let mut cargo_bundle = "cargo bundle";
+    if args.is_release_build {
+        cargo_bundle = "cargo bundle --release";
+    }
+    util::run_os_command_standard(cargo_bundle, Some(&args.build_dir())).unwrap();
 
     Ok(())
 }
@@ -195,7 +184,7 @@ fn print_and_wait(text: &str) {
 }
 
 fn check_executable_exists(executable: &str) -> bool {
-    util::run_os_command(format!("which {}", executable).as_str(), None).is_ok()
+    util::get_os_exec_out(format!("which {}", executable).as_str(), None).is_ok()
 }
 
 fn abort_err(text: &str) {

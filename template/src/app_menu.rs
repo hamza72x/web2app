@@ -1,3 +1,4 @@
+use crate::app_config::AppConfig;
 use tao::{
     accelerator::{Accelerator, SysMods},
     keyboard::KeyCode,
@@ -5,7 +6,11 @@ use tao::{
 };
 use wry::webview::WebView;
 
-use crate::app_config::AppConfig;
+// menu id with enum, but integer
+pub const MENU_ID_THEME_DARK_READER: MenuId = MenuId(4001);
+pub const MENU_ID_ZOOM_IN: MenuId = MenuId(4003);
+pub const MENU_ID_ZOOM_OUT: MenuId = MenuId(4004);
+pub const MENU_ID_RELOAD: MenuId = MenuId(4005);
 
 const SCALE_FACTOR: f64 = 1.1;
 
@@ -31,11 +36,6 @@ const JS_LIGHT_THEME: &str = r#"
         DarkReader.disable();
     })();
 "#;
-// menu id with enum, but integer
-pub const MENU_ID_THEME_DARK_READER: MenuId = MenuId(4001);
-pub const MENU_ID_ZOOM_IN: MenuId = MenuId(4003);
-pub const MENU_ID_ZOOM_OUT: MenuId = MenuId(4004);
-pub const MENU_ID_RELOAD: MenuId = MenuId(4005);
 
 pub fn build_menu(app_config: &AppConfig) -> MenuBar {
     let mut menu_bar = MenuBar::new();

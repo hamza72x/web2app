@@ -14,14 +14,14 @@ pub struct Cli {
 #[derive(Subcommand)]
 pub enum Commands {
     #[command(about = "Builds the app with the given arguments.")]
-    Args(AppData),
+    Args(Args),
 
     #[command(about = "Builds the app with interactive input.")]
     Interactive,
 }
 
 #[derive(Parser)]
-pub struct AppData {
+pub struct Args {
     #[arg(short, long, help = "The name of the app")]
     pub name: String,
 
@@ -49,11 +49,14 @@ pub struct AppData {
         help = "The release build of the app",
         default_value_t = true
     )]
-    pub release_build: bool,
+    pub is_release_build: bool,
+
+    #[arg(short = 'g', long, help = "Custom user agent")]
+    pub user_agent: Option<String>,
 }
 
 // methods
-impl AppData {
+impl Args {
     // build_dir is the path to the build directory
     // e.g: "$HOME/nativefier_tauri_apps/app_name"
     pub fn build_dir(&self) -> String {
@@ -83,7 +86,7 @@ impl AppData {
         let path = Path::new(&build_dir);
 
         let mut build_type = "debug";
-        if self.release_build {
+        if self.is_release_build {
             build_type = "release";
         }
 
@@ -121,19 +124,20 @@ impl AppData {
 pub struct FileBuildData<'a> {
     pub file: File,
     pub data_b64: &'a str,
+    pub is_text_replace_needed: bool,
 }
 
 impl FileBuildData<'_> {
-
-    pub fn decode_and_write(&mut self, app_data: &AppData) {
+    pub fn decode_and_write(&mut self, args: &Args) {
         let data = base64::decode(&self.data_b64).unwrap();
-        let data = String::from_utf8(data).unwrap();
-        let data = self.build_template(&data, app_data);
-
+        let mut data = String::from_utf8(data).unwrap();
+        if self.is_text_replace_needed {
+            data = self.replace_texts(&data, args);
+        }
         self.file.write_all(data.as_bytes()).unwrap();
     }
 
-    fn build_template(&self, data: &String, app_data: &AppData) -> String {
+    fn replace_texts(&self, data: &String, app_data: &Args) -> String {
         let mut result = data.to_string();
 
         result = result.replace(
@@ -172,6 +176,13 @@ impl FileBuildData<'_> {
             "identifier = \"com.example.test\"",
             &format!("identifier = \"{}\"", &app_data.identifier),
         );
+
+        if let Some(user_agent) = &app_data.user_agent {
+            result = result.replace(
+                "let user_agent: Option<&str> = None;",
+                &format!("let user_agent: Option<&str> = Some(\"{}\");", user_agent),
+            );
+        }
 
         return result;
     }
