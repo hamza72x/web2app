@@ -76,6 +76,7 @@ fn get_interactive_data() -> Args {
     data.identifier = input::string("Identifier", "com.example.testapp");
     data.icon = input::optional_string("Icon", "icon_path.png");
     data.is_release_build = input::bool("Release build", true);
+    data.user_agent = input::optional_string("User agent", "Custom user agent");
 
     return data;
 }
