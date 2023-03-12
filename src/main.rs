@@ -23,14 +23,14 @@ const ICON_SIZE_2: u8 = 128;
 
 fn main() -> io::Result<()> {
     let cli = Cli::parse();
-    let data: Args;
+    let mut args: Args;
 
     match cli.command {
         Some(Commands::Args(arg_data)) => {
-            data = arg_data;
+            args = arg_data;
         }
         Some(Commands::Interactive) => {
-            data = get_interactive_args();
+            args = get_interactive_args();
         }
         None => {
             println!("No command given. Use --help for more information.");
@@ -38,25 +38,28 @@ fn main() -> io::Result<()> {
         }
     }
 
+    // post args processing
+    args.update_default_identifier();
+
+    // print given input
+    args.print();
+    sleep(Duration::from_millis(SLEEP_TIME));
+
     // panics if fails
     check_pre_requisites();
 
-    // print given input
-    data.print();
-    sleep(Duration::from_millis(SLEEP_TIME));
-
     // building
-    build(&data)?;
+    build(&args)?;
     sleep(Duration::from_millis(SLEEP_TIME));
 
     // opening output directory in file explorer
-    util::open_dir_in_explorer(&data.bundle_dir());
+    util::open_dir_in_explorer(&args.bundle_dir());
 
     Ok(())
 }
 
 fn get_interactive_args() -> Args {
-    return Args {
+    Args {
         name: input::string_must("Name"),
         url: input::string_must("URL"),
         description: input::string("Description", "An example application."),
@@ -66,7 +69,7 @@ fn get_interactive_args() -> Args {
         icon: input::optional_string("Icon", "icon_path.png"),
         is_release_build: input::bool("Release build", true),
         user_agent: input::optional_string("User agent", "Mozilla/5.0"),
-    };
+    }
 }
 
 // build the app

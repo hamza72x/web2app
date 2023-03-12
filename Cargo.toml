@@ -1,7 +1,7 @@
 [package]
 name = "nativefier_tauri"
 description = "Turn any web page into a desktop app (but, lightweight <1MB)"
-version = "0.2.4"
+version = "0.2.5"
 edition = "2021"
 license = "MIT"
 

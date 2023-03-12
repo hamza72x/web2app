@@ -57,6 +57,13 @@ pub struct Args {
 
 // methods
 impl Args {
+    pub fn update_default_identifier(&mut self) {
+        // if identifier is not given, generate from args.url
+        if self.identifier == "com.example.testapp" {
+            self.identifier = get_identifier_from_url(&self.url);
+        }
+    }
+
     // build_dir is the path to the build directory
     // e.g: "$HOME/nativefier_tauri_apps/app_name"
     pub fn build_dir(&self) -> String {
@@ -106,15 +113,19 @@ impl Args {
     }
 
     pub fn print(&self) {
-        println!("🚀 name: {}", self.name);
-        println!("🚀 url: {}", self.url);
-        println!("🚀 description: {}", self.description);
-        println!("🚀 version: {}", self.version);
-        println!("🚀 author: {}", self.author);
-        println!("🚀 identifier: {}", self.identifier);
+        println!("name: {}", self.name);
+        println!("url: {}", self.url);
+        println!("description: {}", self.description);
+        println!("version: {}", self.version);
+        println!("author: {}", self.author);
+        println!("identifier: {}", self.identifier);
         println!(
-            "🚀 icon: {}",
+            "icon: {}",
             self.icon.as_ref().unwrap_or(&String::from("None"))
+        );
+        println!(
+            "User Agent: {}",
+            self.user_agent.as_ref().unwrap_or(&String::from("Default"))
         );
         println!("");
         println!("🚀 build_dir: {}", self.build_dir());
@@ -186,4 +197,17 @@ impl FileBuildData<'_> {
 
         return result;
     }
+}
+
+
+fn get_identifier_from_url(url: &String) -> String {
+    let url = url.replace("https://", "");
+    let url = url.replace("http://", "");
+    let url = url.replace("www.", "");
+    let url = url.replace("/", ".");
+    let url = url.replace(":", ".");
+    let url = url.replace("-", "_");
+    let url = url.replace(" ", "_");
+
+    format!("com.{}.nativefier_tauri", url)
 }
