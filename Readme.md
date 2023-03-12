@@ -73,6 +73,7 @@ nativefier_tauri interactive
 - [x] Standard Copy/Paste
 - [ ] Dark Reader Extension (already there but, not fully working)
 - [x] Custom User Agent
+- [ ] Desktop Notification (useful for Discord like app)
 - [ ] Custom url navigation
 - [ ] Github Action to build binary
 - [ ] Separate `native_tauri_apps` repo to host common built apps through Github Action
