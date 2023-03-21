@@ -14,6 +14,6 @@ run_template:
 	@cd template; cargo run
 
 run:
-	@cargo build && ./target/debug/nativefier_tauri
+	@cargo build && ./target/debug/web2app
 
 .PHONY: build_template run_template run

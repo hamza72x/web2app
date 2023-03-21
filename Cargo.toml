@@ -1,5 +1,5 @@
 [package]
-name = "nativefier_tauri"
+name = "web2app"
 description = "Turn any web page into a desktop app (but, lightweight <1MB)"
 version = "0.2.5"
 edition = "2021"

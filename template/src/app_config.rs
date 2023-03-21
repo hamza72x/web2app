@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-// $HOME/.config/nativefier_tauri_apps/app_name/config.json
+// $HOME/.config/web2app_apps/app_name/config.json
 #[derive(Serialize, Deserialize, Debug)]
 pub struct AppConfig {
     #[serde(default)]
@@ -24,7 +24,7 @@ impl AppConfig {
         return home::home_dir()
             .unwrap()
             .join(".config")
-            .join("nativefier_tauri_apps")
+            .join("web2app_apps")
             .join("app_name");
     }
 

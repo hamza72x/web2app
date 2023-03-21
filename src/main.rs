@@ -77,10 +77,10 @@ fn build(args: &Args) -> io::Result<()> {
     // build directories
     print_and_wait("\n🎉 Building directories...");
 
-    // $HOME/nativefier_tauri_apps/app_name
+    // $HOME/web2app_apps/app_name
     fs::create_dir_all(&args.build_dir())?;
 
-    // $HOME/nativefier_tauri_apps/app_name/src
+    // $HOME/web2app_apps/app_name/src
     util::re_create_dir(format!("{}/src", &args.build_dir()).as_str())?;
 
     // create files
