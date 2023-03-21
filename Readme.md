@@ -1,42 +1,45 @@
 ### Intro
 
-Turn any web page into a desktop app (but, lightweight <1MB)
+Convert any web page into a desktop app (but, lightweight ~1MB)
 
-- The bundle will be less than 1MB
+- The bundle size will be around 1MB
 - Demo: [https://i.imgur.com/BLr03oF.mp4](https://i.imgur.com/BLr03oF.mp4)
 
-### Requirements
+### Pre-requisites
 
-- [cargo](https://www.rust-lang.org/tools/install)
+#### macOS
 
 ```sh
+# cargo
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
 
-- [imagemagick](https://github.com/imagemagick/imagemagick)
-
-```sh
-# macOS
+# imagemagick
 brew install imagemagick
-
-# apt
-sudo apt install imagemagick
 ```
 
-- Linux Specific
+#### Linux 
+
+- Given example is for Ubuntu, but it should work for other distros as well with respective packages.
 
 ```sh
-# arch
-sudo pacman -S webkit2gtk
+# cargo
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-# debian
-sudo apt install -y webkit2gtk
+# imagemagick
+sudo apt install imagemagick -y
+
+# webkit2gtk
+sudo apt install libwebkit2gtk-4.0-dev -y
 ```
+
+#### Windows
+
+- TODO
 
 ### Install
 
 ```sh
-cargo install web2app
+cargo install web2app cargo-bundle
 ```
 
 ### Usages 
