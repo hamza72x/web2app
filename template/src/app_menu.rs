@@ -1,4 +1,4 @@
-use crate::app_config::AppConfig;
+use super::app_config::AppConfig;
 use tao::{
     accelerator::{Accelerator, SysMods},
     keyboard::KeyCode,
