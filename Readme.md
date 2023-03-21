@@ -36,7 +36,7 @@ sudo apt install -y webkit2gtk
 ### Install
 
 ```sh
-cargo install nativefier_tauri
+cargo install web2app
 ```
 
 ### Usages 
@@ -44,13 +44,13 @@ cargo install nativefier_tauri
 ```sh
 # Run with args
 
-nativefier_tauri args -n Notion -u https://www.notion.so -i icon.png
+web2app args -n Notion -u https://www.notion.so -i icon.png
 ```
 
 ```sh
 # Run with interactive mode
 
-nativefier_tauri interactive
+web2app interactive
 
 # 🍀 Enter Name (TestApp):
 # 🍀 Enter URL (https://trello.com):
@@ -64,7 +64,7 @@ nativefier_tauri interactive
 
 ### Output
 
-- The output will be saved in `$HOME/nativefier_tauri_apps/<name>` directory.
+- The output will be saved in `$HOME/web2app_apps/<name>` directory.
 
 ### Roadmap
 

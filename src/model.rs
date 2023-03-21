@@ -65,19 +65,19 @@ impl Args {
     }
 
     // build_dir is the path to the build directory
-    // e.g: "$HOME/nativefier_tauri_apps/app_name"
+    // e.g: "$HOME/web2app_apps/app_name"
     pub fn build_dir(&self) -> String {
         let home_dir = home::home_dir().unwrap().display().to_string();
 
         let path = Path::new(&home_dir);
-        let path = path.join("nativefier_tauri_apps");
+        let path = path.join("web2app_apps");
         let path = path.join(self.name.to_lowercase());
 
         path.as_path().display().to_string()
     }
 
     // icon_path is the path to the icon file in the build directory
-    // e.g: for the file "icon.png" the path would be "$HOME/nativefier_tauri_apps/app_name/<size>x<size>.png"
+    // e.g: for the file "icon.png" the path would be "$HOME/web2app_apps/app_name/<size>x<size>.png"
     pub fn icon_path(&self, size: u8) -> String {
         let build_dir = self.build_dir();
         let path = Path::new(&build_dir);
@@ -87,7 +87,7 @@ impl Args {
     }
 
     // bundle_dir is the path to the bundle directory
-    // e.g: "$HOME/nativefier_tauri_apps/app_name/target/debug/bundle"
+    // e.g: "$HOME/web2app_apps/app_name/target/debug/bundle"
     pub fn bundle_dir(&self) -> String {
         let build_dir = self.build_dir();
         let path = Path::new(&build_dir);
@@ -102,8 +102,8 @@ impl Args {
     }
 
     // dest_tmpl_file is the file in the build directory
-    // e.g: for the file "src/main.rs" the path would be "$HOME/nativefier_tauri_apps/app_name/src/main.rs"
-    // e.g: for the file "Cargo.toml" the path would be "$HOME/nativefier_tauri_apps/app_name/Cargo.toml"
+    // e.g: for the file "src/main.rs" the path would be "$HOME/web2app_apps/app_name/src/main.rs"
+    // e.g: for the file "Cargo.toml" the path would be "$HOME/web2app_apps/app_name/Cargo.toml"
     pub fn dest_tmpl_file(&self, path: &str) -> File {
         File::create(self.dest_tmpl_path_buf(path)).unwrap()
     }
@@ -209,5 +209,5 @@ fn get_identifier_from_url(url: &String) -> String {
     let url = url.replace("-", "_");
     let url = url.replace(" ", "_");
 
-    format!("com.{}.nativefier_tauri", url)
+    format!("com.{}.web2app", url)
 }
