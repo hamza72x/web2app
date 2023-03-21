@@ -1,6 +1,8 @@
 mod app_config;
 mod app_menu;
+mod app_data;
 use app_config::AppConfig;
+mod js_scripts;
 
 use wry::{
     application::{
@@ -12,36 +14,20 @@ use wry::{
     webview::WebViewBuilder,
 };
 
-const JS_LOAD_SCRIPTS: &str = r#"
-    // load darkreader.js
-    (function() {
-        window.onload = function() {
-            console.log('Window is loaded');
-            console.log('Loading DarkReader');
-            var script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/darkreader@4.9.58/darkreader.min.js';
-            script.onload = function() {
-                console.log('DarkReader is loaded');
-            };
-            document.head.appendChild(script);
-        };
-    })();
-"#;
-
 fn main() -> wry::Result<()> {
     let user_agent: Option<&str> = None;
     let app_config = AppConfig::load().unwrap_or(AppConfig::default());
     let event_loop = EventLoop::new();
 
     let window = WindowBuilder::new()
-        .with_title("app_name")
+        .with_title(app_data::APP_NAME)
         .with_menu(app_menu::build_menu(&app_config))
         .build(&event_loop)?;
 
     let mut web_view_builder = WebViewBuilder::new(window)?
         .with_devtools(true)
-        .with_initialization_script(JS_LOAD_SCRIPTS)
-        .with_url("https://www.notion.so")?;
+        .with_initialization_script(js_scripts::INIT)
+        .with_url(app_data::URL)?;
 
     if let Some(user_agent) = user_agent {
         web_view_builder = web_view_builder.with_user_agent(user_agent);

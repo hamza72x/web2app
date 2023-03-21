@@ -1,3 +1,4 @@
+use super::app_data;
 use serde::{Deserialize, Serialize};
 
 // $HOME/.config/web2app_apps/app_name/config.json
@@ -8,6 +9,9 @@ pub struct AppConfig {
 
     #[serde(default)]
     pub dark_reader_enabled: bool,
+
+    #[serde(default)]
+    pub is_notification_enabled: bool,
 }
 
 impl Default for AppConfig {
@@ -15,6 +19,7 @@ impl Default for AppConfig {
         return Self {
             zoom_factor: 1.0,
             dark_reader_enabled: false,
+            is_notification_enabled: true,
         };
     }
 }
@@ -24,8 +29,8 @@ impl AppConfig {
         return home::home_dir()
             .unwrap()
             .join(".config")
-            .join("web2app_apps")
-            .join("app_name");
+            .join(app_data::APPS_DIR)
+            .join(app_data::APP_NAME)
     }
 
     fn config_path() -> std::path::PathBuf {

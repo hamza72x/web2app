@@ -104,19 +104,31 @@ fn build(args: &Args) -> io::Result<()> {
         FileBuildData {
             file: args.dest_tmpl_file("src/main.rs"),
             data_b64: generated::MAIN_RS,
-            is_text_replace_needed: true,
+            is_text_replace_needed: false,
         },
         // app_config.rs
         FileBuildData {
             file: args.dest_tmpl_file("src/app_config.rs"),
             data_b64: generated::APP_CONFIG,
-            is_text_replace_needed: true,
+            is_text_replace_needed: false,
         },
         // app_menu.rs
         FileBuildData {
             file: args.dest_tmpl_file("src/app_menu.rs"),
             data_b64: generated::APP_MENU,
+            is_text_replace_needed: false,
+        },
+        // app_data.rs
+        FileBuildData {
+            file: args.dest_tmpl_file("src/app_data.rs"),
+            data_b64: generated::APP_DATA,
             is_text_replace_needed: true,
+        },
+        // js_scripts.rs
+        FileBuildData {
+            file: args.dest_tmpl_file("src/js_scripts.rs"),
+            data_b64: generated::JS_SCRIPTS,
+            is_text_replace_needed: false,
         },
     ];
 

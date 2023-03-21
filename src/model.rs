@@ -160,20 +160,16 @@ impl FileBuildData<'_> {
             &format!("name = \"{}\"", &app_data.name),
         );
         result = result.replace(
-            "with_url(\"https://www.notion.so\")",
-            &format!("with_url(\"{}\")", &app_data.url),
+            "pub const URL: &str = \"https://www.notion.so\";",
+            &format!("pub const URL: &str = \"{}\";", &app_data.url),
         );
         result = result.replace(
-            "with_title(\"app_name\")",
-            &format!("with_title(\"{}\")", &app_data.name),
+            "pub const APP_NAME: &str = \"app_name\";",
+            &format!("pub const APP_NAME: &str = \"{}\";", &app_data.name),
         );
         result = result.replace(
             "description = \"app_description\"",
             &format!("description = \"{}\"", &app_data.description),
-        );
-        result = result.replace(
-            "join(\"app_name\")",
-            &format!("join(\"{}\")", &app_data.name.to_lowercase()),
         );
         result = result.replace(
             "version = \"0.1.0\"",
