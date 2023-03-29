@@ -1,11 +1,10 @@
-use clap::Parser;
-
 use std::fs;
 use std::io;
 use std::process::exit;
 use std::thread::sleep;
 use std::time::Duration;
 
+mod cli;
 mod generated;
 mod input;
 mod model;
@@ -13,8 +12,6 @@ mod template_builder;
 mod util;
 
 use model::Args;
-use model::Cli;
-use model::Commands;
 
 // milliseconds
 const SLEEP_TIME: u64 = 10;
@@ -22,21 +19,7 @@ const ICON_SIZE_1: u8 = 32;
 const ICON_SIZE_2: u8 = 128;
 
 fn main() -> io::Result<()> {
-    let cli = Cli::parse();
-    let mut args: Args;
-
-    match cli.command {
-        Some(Commands::Args(arg_data)) => {
-            args = arg_data;
-        }
-        Some(Commands::Interactive) => {
-            args = get_interactive_args();
-        }
-        None => {
-            println!("No command given. Use --help for more information.");
-            return Err(io::Error::new(io::ErrorKind::Other, "No command given."));
-        }
-    }
+    let mut args = cli::get_args().expect("failed to get cli args");
 
     // post args processing
     args.update_default_identifier();
@@ -49,27 +32,13 @@ fn main() -> io::Result<()> {
     check_pre_requisites();
 
     // building
-    build(&args)?;
+    build(&args).expect("failed to build");
     sleep(Duration::from_millis(SLEEP_TIME));
 
     // opening output directory in file explorer
     util::open_dir_in_explorer(&args.bundle_dir());
 
     Ok(())
-}
-
-fn get_interactive_args() -> Args {
-    Args {
-        name: input::string_must("Name"),
-        url: input::string_must("URL"),
-        description: input::string("Description", "An example application."),
-        version: input::string("Version", "0.1.0"),
-        author: input::string("Author", "hamza72x"),
-        identifier: input::string("Identifier", "com.example.testapp"),
-        icon: input::optional_string("Icon", "icon_path.png"),
-        is_release_build: input::bool("Release build", true),
-        user_agent: input::optional_string("User agent", "Mozilla/5.0"),
-    }
 }
 
 // build the app
@@ -141,6 +110,7 @@ fn print_and_wait(text: &str) {
     sleep(Duration::from_millis(SLEEP_TIME));
 }
 
+// TODO:- update for windows
 fn check_executable_exists(executable: &str) -> bool {
     util::get_os_exec_out(format!("which {}", executable).as_str(), None).is_ok()
 }
