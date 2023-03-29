@@ -86,20 +86,8 @@ pub fn build_template_files(args: &Args) -> [FileBuildData; 11] {
                     format!("description = \"{}\"", &args.description),
                 );
                 map.insert(
-                    String::from("name = \"AppName\""),
-                    format!("name = \"{}\"", &args.name),
-                );
-                map.insert(
-                    String::from("identifier = \"com.example.test\""),
-                    format!("identifier = \"{}\"", &args.identifier),
-                );
-                map.insert(
                     String::from("version = \"0.1.0\""),
                     format!("version = \"{}\"", &args.version),
-                );
-                map.insert(
-                    String::from("copyright = \"Copyright © author_name\", "),
-                    format!("copyright = \"Copyright © {}\", ", &args.author),
                 );
                 Some(map)
             },
@@ -124,12 +112,16 @@ pub fn build_template_files(args: &Args) -> [FileBuildData; 11] {
             search_replace_texts: {
                 let mut map = std::collections::HashMap::new();
                 map.insert(
-                    String::from("productName: \"app_name_lowercased\""),
-                    format!("productName: \"{}\"", &args.name.to_lowercase()),
+                    String::from("\"productName\": \"app_name_lowercased\""),
+                    format!("\"productName\": \"{}\"", &args.name.to_lowercase()),
                 );
                 map.insert(
-                    String::from("identifier: \"com.example.test\""),
-                    format!("identifier: \"{}\"", &args.identifier),
+                    String::from("\"identifier\": \"com.example.test\""),
+                    format!("\"identifier\": \"{}\"", &args.identifier),
+                );
+                map.insert(
+                    String::from("\"version\": \"0.1.0\""),
+                    format!("\"version\": \"{}\"", &args.version),
                 );
                 Some(map)
             },

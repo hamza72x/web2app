@@ -39,7 +39,7 @@ sudo apt install libwebkit2gtk-4.0-dev -y
 ### Install
 
 ```sh
-cargo install web2app cargo-bundle
+cargo install web2app tauri-cli
 ```
 
 ### Usages 

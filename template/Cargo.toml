@@ -18,25 +18,6 @@ cocoa = "0.24.1"
 [build-dependencies]
 tauri-build = { version = "1.2", features = [] }
 
-[package.metadata.bundle]
-name = "AppName"
-identifier = "com.example.test"
-icon = ["32x32.png", "128x128.png"]
-version = "0.1.0"
-resources = []
-copyright = "Copyright © author_name"
-category = "Developer Tool"
-short_description = "An example application."
-long_description = """
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-eiusmod tempor incididunt ut labore et dolore magna aliqua.  Ut
-enim ad minim veniam, quis nostrud exercitation ullamco laboris
-nisi ut aliquip ex ea commodo consequat.
-"""
-deb_depends = []
-osx_frameworks = []
-osx_url_schemes = []
-
 [profile.release]
 strip = true
 panic = "abort"

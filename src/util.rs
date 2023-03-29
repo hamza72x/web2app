@@ -97,3 +97,8 @@ pub fn re_create_dir(name: &str) -> io::Result<()> {
 
     fs::create_dir_all(dir)
 }
+
+pub fn copy_file(source: &String, dest: String) -> io::Result<()> {
+    fs::copy(source, dest)?;
+    Ok(())
+}

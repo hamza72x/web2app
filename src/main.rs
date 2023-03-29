@@ -15,8 +15,6 @@ use model::Args;
 
 // milliseconds
 const SLEEP_TIME: u64 = 10;
-const ICON_SIZE_1: u8 = 32;
-const ICON_SIZE_2: u8 = 128;
 
 fn main() -> io::Result<()> {
     let mut args = cli::get_args().expect("failed to get cli args");
@@ -27,9 +25,6 @@ fn main() -> io::Result<()> {
     // print given input
     args.print();
     sleep(Duration::from_millis(SLEEP_TIME));
-
-    // panics if fails
-    check_pre_requisites();
 
     // building
     build(&args).expect("failed to build");
@@ -52,6 +47,9 @@ fn build(args: &Args) -> io::Result<()> {
     // $HOME/web2app_apps/app_name/src
     util::re_create_dir(format!("{}/src", &args.build_dir()).as_str())?;
 
+    // $HOME/web2app_apps/app_name/icons
+    util::re_create_dir(format!("{}/icons", &args.build_dir()).as_str())?;
+
     // create files
     print_and_wait("\n🎉 Creating files...");
 
@@ -68,54 +66,35 @@ fn build(args: &Args) -> io::Result<()> {
     // build icons
     print_and_wait("\n🎉 Building icons...");
 
-    if args.icon.is_some() {
-        let source_icon = args.icon.as_ref().unwrap();
-        util::resize_icon(&source_icon, ICON_SIZE_1, args.icon_path(ICON_SIZE_1)).unwrap();
-        util::resize_icon(&source_icon, ICON_SIZE_2, args.icon_path(ICON_SIZE_2)).unwrap();
+    if let Some(icon) = args.icon.as_ref() {
+        // copy icon to web2apps/app_name/icons/app-icon.png
+        util::copy_file(&icon, args.app_icon_path()).unwrap();
+
+        // run `cargo tauri icon`
+        util::run_os_command_standard(
+            format!(
+                "cargo tauri icon {}",
+                args.app_icon_path()
+            )
+            .as_str(),
+            Some(&args.build_dir()),
+        ).expect("failed to run cargo tauri icon");
     }
 
-    // run cargo bundle
-    print_and_wait("\n🎉 Running cargo build...");
+    // run cargo tauri build
+    print_and_wait("\n🎉 Running cargo tauri build...");
 
-    let mut cargo_bundle = "cargo bundle";
-    if args.is_release_build {
-        cargo_bundle = "cargo bundle --release";
+    let mut tauri_build = "cargo tauri build";
+    if !args.is_release_build {
+        tauri_build = "cargo tauri build --debug";
     }
-    util::run_os_command_standard(cargo_bundle, Some(&args.build_dir())).unwrap();
+
+    util::run_os_command_standard(tauri_build, Some(&args.build_dir())).unwrap();
 
     Ok(())
-}
-
-// panics if fails
-fn check_pre_requisites() {
-    print_and_wait("🎉 Checking prerequisites...");
-
-    // cargo-build
-    if !check_executable_exists("cargo-bundle") {
-        abort_err(
-            "cargo-bundle is not installed.\nPlease install it with `cargo install cargo-bundle`.",
-        );
-    }
-
-    // convert
-    if !check_executable_exists("convert") {
-        abort_err("convert is not installed.\nPlease install it with `brew install imagemagick` [macOS]\nCheck readme for other Operating System.");
-    }
-
-    print_and_wait("✅ Checking prerequisites done.\n");
 }
 
 fn print_and_wait(text: &str) {
     println!("{}", text);
     sleep(Duration::from_millis(SLEEP_TIME));
-}
-
-// TODO:- update for windows
-fn check_executable_exists(executable: &str) -> bool {
-    util::get_os_exec_out(format!("which {}", executable).as_str(), None).is_ok()
-}
-
-fn abort_err(text: &str) {
-    println!("Error: \x1b[31m{}\x1b[0m", text);
-    exit(1);
 }

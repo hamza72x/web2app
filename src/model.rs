@@ -78,11 +78,11 @@ impl Args {
     }
 
     // icon_path is the path to the icon file in the build directory
-    // e.g: for the file "icon.png" the path would be "$HOME/web2app_apps/app_name/<size>x<size>.png"
-    pub fn icon_path(&self, size: u8) -> String {
+    // e.g: for the file "icon.png" the path would be "$HOME/web2app_apps/app_name/icons/app-icon.png"
+    pub fn app_icon_path(&self) -> String {
         let build_dir = self.build_dir();
         let path = Path::new(&build_dir);
-        let path = path.join(format!("{}x{}.png", size, size));
+        let path = path.join("icons").join("app-icon.png");
 
         path.to_str().unwrap().to_string()
     }
@@ -153,7 +153,6 @@ impl FileBuildData<'_> {
     }
 }
 
-
 fn get_identifier_from_url(url: &String) -> String {
     let url = url.replace("https://", "");
     let url = url.replace("http://", "");
@@ -163,5 +162,5 @@ fn get_identifier_from_url(url: &String) -> String {
     let url = url.replace("-", "_");
     let url = url.replace(" ", "_");
 
-    format!("com.{}.web2app", url)
+    format!("com.{}.web2app", url).replace("..", ".")
 }
