@@ -1,20 +1,20 @@
+use clap::Parser;
+
 use std::fs;
 use std::io;
 use std::process::exit;
 use std::thread::sleep;
 use std::time::Duration;
 
-use clap::Parser;
-
 mod generated;
 mod input;
 mod model;
+mod template_builder;
 mod util;
 
 use model::Args;
 use model::Cli;
 use model::Commands;
-use model::FileBuildData;
 
 // milliseconds
 const SLEEP_TIME: u64 = 10;
@@ -87,58 +87,14 @@ fn build(args: &Args) -> io::Result<()> {
     print_and_wait("\n🎉 Creating files...");
 
     // array of FileBuildData
-    let mut files = [
-        // Cargo.toml
-        FileBuildData {
-            file: args.dest_tmpl_file("Cargo.toml"),
-            data_b64: generated::CARGO_TOML,
-            is_text_replace_needed: true,
-        },
-        // Cargo.lock
-        FileBuildData {
-            file: args.dest_tmpl_file("Cargo.lock"),
-            data_b64: generated::CARGO_LOCK,
-            is_text_replace_needed: true,
-        },
-        // main.rs
-        FileBuildData {
-            file: args.dest_tmpl_file("src/main.rs"),
-            data_b64: generated::MAIN_RS,
-            is_text_replace_needed: false,
-        },
-        // app_config.rs
-        FileBuildData {
-            file: args.dest_tmpl_file("src/app_config.rs"),
-            data_b64: generated::APP_CONFIG,
-            is_text_replace_needed: false,
-        },
-        // app_menu.rs
-        FileBuildData {
-            file: args.dest_tmpl_file("src/app_menu.rs"),
-            data_b64: generated::APP_MENU,
-            is_text_replace_needed: false,
-        },
-        // app_data.rs
-        FileBuildData {
-            file: args.dest_tmpl_file("src/app_data.rs"),
-            data_b64: generated::APP_DATA,
-            is_text_replace_needed: true,
-        },
-        // js_scripts.rs
-        FileBuildData {
-            file: args.dest_tmpl_file("src/js_scripts.rs"),
-            data_b64: generated::JS_SCRIPTS,
-            is_text_replace_needed: false,
-        },
-    ];
-
     print_and_wait("\n🎉 Building templates...");
-    
+
+    let mut files = template_builder::build_template_files(args);
+
     // write files
     for file in files.iter_mut() {
-        file.decode_and_write(&args);
+        file.decode_and_write();
     }
-
 
     // build icons
     print_and_wait("\n🎉 Building icons...");
@@ -160,8 +116,6 @@ fn build(args: &Args) -> io::Result<()> {
 
     Ok(())
 }
-
-
 
 // panics if fails
 fn check_pre_requisites() {
