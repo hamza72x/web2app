@@ -27,8 +27,8 @@ pub fn build_template_files(args: &Args) -> [FileBuildData; 11] {
                 let mut map = std::collections::HashMap::new();
                 if let Some(user_agent) = &args.user_agent {
                     map.insert(
-                        String::from("let user_agent: Option<&str> = None;"),
-                        format!("let user_agent: Option<&str> = Some(\"{}\");", user_agent),
+                        String::from("pub const USER_AGENT: Option<&str> = None;"),
+                        format!("pub const USER_AGENT: Option<&str> = Some(\"{}\");", user_agent),
                     );
                 }
                 map.insert(
