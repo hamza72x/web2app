@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use super::consts;
 use super::generated;
 use super::model::Args;
 use super::model::FileBuildData;
@@ -112,8 +113,8 @@ pub fn build_template_files(args: &Args) -> [FileBuildData; 11] {
             search_replace_texts: {
                 let mut map = std::collections::HashMap::new();
                 map.insert(
-                    String::from("\"productName\": \"app_name_lowercased\""),
-                    format!("\"productName\": \"{}\"", &args.name.to_lowercase()),
+                    String::from("\"productName\": \"app_name\""),
+                    format!("\"productName\": \"{}\"", &args.name),
                 );
                 map.insert(
                     String::from("\"identifier\": \"com.example.test\""),
@@ -123,6 +124,12 @@ pub fn build_template_files(args: &Args) -> [FileBuildData; 11] {
                     String::from("\"version\": \"0.1.0\""),
                     format!("\"version\": \"{}\"", &args.version),
                 );
+                if args.icon.is_some() {
+                    map.insert(
+                        String::from("\"icon\": []"),
+                        format!("\"icon\": [{}]", consts::TAURI_ICON_ELEMENTS),
+                    );
+                }
                 Some(map)
             },
         },

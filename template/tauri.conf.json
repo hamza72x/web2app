@@ -7,7 +7,7 @@
       "withGlobalTauri": true
     },
     "package": {
-      "productName": "app_name_lowercased",
+      "productName": "app_name",
       "version": "0.1.0"
     },
     "tauri": {

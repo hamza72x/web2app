@@ -1,6 +1,5 @@
 use std::fs;
 use std::io;
-use std::process::exit;
 use std::thread::sleep;
 use std::time::Duration;
 
@@ -10,6 +9,7 @@ mod input;
 mod model;
 mod template_builder;
 mod util;
+mod consts;
 
 use model::Args;
 
@@ -72,13 +72,10 @@ fn build(args: &Args) -> io::Result<()> {
 
         // run `cargo tauri icon`
         util::run_os_command_standard(
-            format!(
-                "cargo tauri icon {}",
-                args.app_icon_path()
-            )
-            .as_str(),
+            format!("cargo tauri icon {}", args.app_icon_path()).as_str(),
             Some(&args.build_dir()),
-        ).expect("failed to run cargo tauri icon");
+        )
+        .expect("failed to run cargo tauri icon");
     }
 
     // run cargo tauri build
