@@ -2,7 +2,7 @@
 
 Convert any web page into a desktop app (but, lightweight ~1MB)
 
-- The bundle size will be around 1MB
+- The bundle size will be around 3MB
 - Demo: [https://i.imgur.com/BLr03oF.mp4](https://i.imgur.com/BLr03oF.mp4)
 
 ### Pre-requisites
@@ -74,16 +74,16 @@ web2app interactive
 - [x] Zoom In/Out
 - [x] Reload
 - [x] Standard Copy/Paste
-- [ ] Dark Reader Extension (already there but, not fully working)
+- [ ] File download support
 - [x] Custom User Agent
-- [ ] Desktop Notification (useful for Discord like app)
+- [ ] Desktop Notification (not fully working)
 - [ ] Custom url navigation
 - [ ] Github Action to build binary
-- [ ] Separate `native_tauri_apps` repo to host common built apps through Github Action
+- [ ] Separate `web2app_apps` repo to host common built apps through Github Action
 - [ ] Retain window size and position after restart
-- [ ] File download support
 - [ ] Automatically fetch icon from website
 - [ ] Docs in crates.io
+- [ ] Dark Reader Extension (already there but, not fully working)
 
 ### Libraries
 
