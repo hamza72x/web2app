@@ -36,7 +36,7 @@ pub fn build_template_files(args: &Args) -> [FileBuildData; 11] {
                     format!("pub const APP_NAME: &str = \"{}\";", &args.name),
                 );
                 map.insert(
-                    String::from("pub const URL: &str = \"https://www.notion.so/\";"),
+                    String::from("pub const URL: &str = \"https://www.notion.so\";"),
                     format!("pub const URL: &str = \"{}\";", &args.url),
                 );
                 Some(map)
