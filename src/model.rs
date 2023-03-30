@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::Write;
 use std::path::Path;
@@ -77,11 +78,11 @@ impl Args {
     }
 
     // icon_path is the path to the icon file in the build directory
-    // e.g: for the file "icon.png" the path would be "$HOME/web2app_apps/app_name/<size>x<size>.png"
-    pub fn icon_path(&self, size: u8) -> String {
+    // e.g: for the file "icon.png" the path would be "$HOME/web2app_apps/app_name/icons/app-icon.png"
+    pub fn app_icon_path(&self) -> String {
         let build_dir = self.build_dir();
         let path = Path::new(&build_dir);
-        let path = path.join(format!("{}x{}.png", size, size));
+        let path = path.join("icons").join("app-icon.png");
 
         path.to_str().unwrap().to_string()
     }
@@ -135,75 +136,42 @@ impl Args {
 pub struct FileBuildData<'a> {
     pub file: File,
     pub data_b64: &'a str,
-    pub is_text_replace_needed: bool,
+    // map if search and replace text
+    pub search_replace_texts: Option<HashMap<String, String>>,
 }
 
 impl FileBuildData<'_> {
-    pub fn decode_and_write(&mut self, args: &Args) {
+    pub fn decode_and_write(&mut self) {
         let data = base64::decode(&self.data_b64).unwrap();
         let mut data = String::from_utf8(data).unwrap();
-        if self.is_text_replace_needed {
-            data = self.replace_texts(&data, args);
+        if let Some(search_replace_texts) = &self.search_replace_texts {
+            for (key, value) in search_replace_texts {
+                data = data.replace(key.as_str(), value);
+            }
         }
         self.file.write_all(data.as_bytes()).unwrap();
     }
-
-    fn replace_texts(&self, data: &String, app_data: &Args) -> String {
-        let mut result = data.to_string();
-
-        result = result.replace(
-            "name = \"app_name_lowercased\"",
-            &format!("name = \"{}\"", &app_data.name.to_lowercase()),
-        );
-        result = result.replace(
-            "name = \"AppName\"",
-            &format!("name = \"{}\"", &app_data.name),
-        );
-        result = result.replace(
-            "pub const URL: &str = \"https://www.notion.so\";",
-            &format!("pub const URL: &str = \"{}\";", &app_data.url),
-        );
-        result = result.replace(
-            "pub const APP_NAME: &str = \"app_name\";",
-            &format!("pub const APP_NAME: &str = \"{}\";", &app_data.name),
-        );
-        result = result.replace(
-            "description = \"app_description\"",
-            &format!("description = \"{}\"", &app_data.description),
-        );
-        result = result.replace(
-            "version = \"0.1.0\"",
-            &format!("version = \"{}\"", &app_data.version),
-        );
-        result = result.replace(
-            "copyright = \"Copyright © author_name\", ",
-            &format!("copyright = \"Copyright © {}\", ", &app_data.author),
-        );
-        result = result.replace(
-            "identifier = \"com.example.test\"",
-            &format!("identifier = \"{}\"", &app_data.identifier),
-        );
-
-        if let Some(user_agent) = &app_data.user_agent {
-            result = result.replace(
-                "let user_agent: Option<&str> = None;",
-                &format!("let user_agent: Option<&str> = Some(\"{}\");", user_agent),
-            );
-        }
-
-        return result;
-    }
 }
 
-
 fn get_identifier_from_url(url: &String) -> String {
+    // remove http(s)://
     let url = url.replace("https://", "");
     let url = url.replace("http://", "");
-    let url = url.replace("www.", "");
-    let url = url.replace("/", ".");
-    let url = url.replace(":", ".");
-    let url = url.replace("-", "_");
-    let url = url.replace(" ", "_");
 
-    format!("com.{}.web2app", url)
+    // replace all non alphanumeric characters with a dot
+    let identifier = url
+        .chars()
+        .map(|c| {
+            if c.is_ascii_alphanumeric() || c == '.' {
+                c
+            } else {
+                '.'
+            }
+        })
+        .collect::<String>();
+
+    let identifier = identifier + ".web2app";
+
+    // replace double dots with a single dot
+    return identifier.replace("..", ".");
 }

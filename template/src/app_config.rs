@@ -30,7 +30,7 @@ impl AppConfig {
             .unwrap()
             .join(".config")
             .join(app_data::APPS_DIR)
-            .join(app_data::APP_NAME)
+            .join(app_data::APP_NAME);
     }
 
     fn config_path() -> std::path::PathBuf {
@@ -45,18 +45,17 @@ impl AppConfig {
         }
     }
 
-    pub fn load() -> Option<Self> {
+    pub fn load() -> Self {
         let config_path = Self::config_path();
 
         if !config_path.exists() {
             Self::create_config_dir();
-            return None;
+            return Self::default();
         }
 
         let config_file = std::fs::File::open(config_path).unwrap();
-        let config: Self = serde_json::from_reader(config_file).unwrap();
 
-        return Some(config);
+        return serde_json::from_reader(config_file).unwrap();
     }
 
     pub fn save(&self) {

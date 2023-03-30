@@ -11,25 +11,12 @@ tao = "0.15.6"
 home = "0.5.4"
 serde_json = "1.0.94"
 serde = "1.0.154"
+tauri = { version = "1.2", features = ["notification-all", "shell-open"] }
+objc = "0.2.7"
+cocoa = "0.24.1"
 
-[package.metadata.bundle]
-name = "AppName"
-identifier = "com.example.test"
-icon = ["32x32.png", "128x128.png"]
-version = "0.1.0"
-resources = []
-copyright = "Copyright © author_name"
-category = "Developer Tool"
-short_description = "An example application."
-long_description = """
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-eiusmod tempor incididunt ut labore et dolore magna aliqua.  Ut
-enim ad minim veniam, quis nostrud exercitation ullamco laboris
-nisi ut aliquip ex ea commodo consequat.
-"""
-deb_depends = []
-osx_frameworks = []
-osx_url_schemes = []
+[build-dependencies]
+tauri-build = { version = "1.2", features = [] }
 
 [profile.release]
 strip = true
@@ -37,3 +24,12 @@ panic = "abort"
 codegen-units = 1
 lto = "thin"
 opt-level = "s"
+
+
+[features]
+# by default Tauri runs in production mode
+# when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
+default = ["custom-protocol"]
+# this feature is used used for production builds where `devPath` points to the filesystem
+# DO NOT remove this
+custom-protocol = ["tauri/custom-protocol"]
