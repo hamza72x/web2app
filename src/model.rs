@@ -154,13 +154,24 @@ impl FileBuildData<'_> {
 }
 
 fn get_identifier_from_url(url: &String) -> String {
+    // remove http(s)://
     let url = url.replace("https://", "");
     let url = url.replace("http://", "");
-    let url = url.replace("www.", "");
-    let url = url.replace("/", ".");
-    let url = url.replace(":", ".");
-    let url = url.replace("-", "_");
-    let url = url.replace(" ", "_");
 
-    format!("com.{}.web2app", url).replace("..", ".")
+    // replace all non alphanumeric characters with a dot
+    let identifier = url
+        .chars()
+        .map(|c| {
+            if c.is_ascii_alphanumeric() || c == '.' {
+                c
+            } else {
+                '.'
+            }
+        })
+        .collect::<String>();
+
+    let identifier = identifier + ".web2app";
+
+    // replace double dots with a single dot
+    return identifier.replace("..", ".");
 }
