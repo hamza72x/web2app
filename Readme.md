@@ -1,6 +1,6 @@
 ### Intro
 
-Convert any web page into a desktop app (but, lightweight ~1MB)
+Convert any web page into a desktop app (but, lightweight ~3MB)
 
 - The bundle size will be around 3MB
 - Demo: [https://i.imgur.com/BLr03oF.mp4](https://i.imgur.com/BLr03oF.mp4)
