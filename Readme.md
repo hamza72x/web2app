@@ -74,10 +74,10 @@ web2app interactive
 - [x] Zoom In/Out
 - [x] Reload
 - [x] Standard Copy/Paste
-- [ ] File download support
 - [x] Custom User Agent
-- [ ] Desktop Notification (not fully working)
-- [ ] Custom url navigation
+- [x] Desktop Notification (working for some apps)
+- [ ] Back and forward navigation
+- [ ] File download support
 - [ ] Github Action to build binary
 - [ ] Separate `web2app_apps` repo to host common built apps through Github Action
 - [ ] Retain window size and position after restart
