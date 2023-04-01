@@ -16,6 +16,7 @@ use tauri::WindowUrl;
 // open new window handler
 #[tauri::command]
 fn open_new_window(app_handle: AppHandle, url: String) {
+    println!("[rust handler] open new window: {}", url);
     create_a_window(
         &app_handle,
         &util::alphanumeric(url.as_str(), '_'),
@@ -26,7 +27,15 @@ fn open_new_window(app_handle: AppHandle, url: String) {
 // download file handler
 #[tauri::command]
 fn download_file(url: String) {
+    println!("[rust handler] download file: {}", url);
     util::download_file(url.as_str(), "downloaded_file.txt");
+}
+
+// open_browser handler
+#[tauri::command]
+fn open_browser(url: String) {
+    println!("[rust handler] open browser: {}", url);
+    util::open_browser(url.as_str());
 }
 
 pub fn build_tauri_app() {
@@ -52,7 +61,8 @@ pub fn build_tauri_app() {
     builder
         .invoke_handler(tauri::generate_handler![
             open_new_window,
-            download_file
+            download_file,
+            open_browser,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

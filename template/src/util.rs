@@ -43,3 +43,31 @@ pub fn download_file(url: &str, path: &str) {
     let mut out = File::create(path).expect("failed to create file");
     io::copy(&mut body.as_bytes(), &mut out).expect("failed to copy content");
 }
+
+pub fn open_browser(url: &str) {
+    #[cfg(target_os = "linux")]
+    {
+        let _ = std::process::Command::new("xdg-open")
+            .arg(url)
+            .spawn()
+            .expect("failed to open browser");
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        let _ = std::process::Command::new("cmd")
+            .arg("/C")
+            .arg("start")
+            .arg(url)
+            .spawn()
+            .expect("failed to open browser");
+    }
+
+    #[cfg(target_os = "macos")]
+    {
+        let _ = std::process::Command::new("open")
+            .arg(url)
+            .spawn()
+            .expect("failed to open browser");
+    }
+}
