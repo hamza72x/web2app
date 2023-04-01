@@ -9,32 +9,28 @@ Convert any web page into a desktop app (but, lightweight ~3MB)
 
 #### macOS
 
-```sh
-# cargo
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-# imagemagick
-brew install imagemagick
-```
+    ```sh
+    # cargo
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    ```
 
 #### Linux 
 
 - Given example is for Ubuntu, but it should work for other distros as well with respective packages.
 
-```sh
-# cargo
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    ```sh
+    # cargo
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-# imagemagick
-sudo apt install imagemagick -y
-
-# webkit2gtk
-sudo apt install libwebkit2gtk-4.0-dev -y
-```
+    # webkit2gtk
+    sudo apt install libwebkit2gtk-4.0-dev -y
+    ```
 
 #### Windows
 
-- TODO
+Windows Setup (x64)
+
+- Setup Tauri Pre-Requisities for windows: [https://tauri.app/v1/guides/getting-started/prerequisites#setting-up-windows](https://tauri.app/v1/guides/getting-started/prerequisites#setting-up-windows)
 
 ### Install
 
@@ -88,5 +84,4 @@ web2app interactive
 ### Libraries
 
 - [Tauri](https://github.com/tauri-apps/tauri)
-- [wry](https://github.com/tauri-apps/wry)
 - [home](https://github.com/brson/home)
