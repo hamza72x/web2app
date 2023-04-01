@@ -1,15 +1,42 @@
 use std::path::PathBuf;
 
-use crate::util;
-
 use super::app_config::AppConfig;
 use super::app_data;
 use super::app_menu;
 use super::generated;
+use super::util;
 
-use tauri::App;
+use tauri::AppHandle;
+use tauri::Manager;
 use tauri::WindowBuilder;
 use tauri::WindowUrl;
+
+// handlers
+
+// open new window handler
+#[tauri::command]
+fn open_new_window(app_handle: AppHandle, url: String) {
+    println!("[rust handler] open new window: {}", url);
+    create_a_window(
+        &app_handle,
+        &util::alphanumeric(url.as_str(), '_'),
+        url.as_str(),
+    );
+}
+
+// download file handler
+#[tauri::command]
+fn download_file(url: String) {
+    println!("[rust handler] download file: {}", url);
+    util::download_file(url.as_str(), "downloaded_file.txt");
+}
+
+// open_browser handler
+#[tauri::command]
+fn open_browser(url: String) {
+    println!("[rust handler] open browser: {}", url);
+    util::open_browser(url.as_str());
+}
 
 pub fn build_tauri_app() {
     let mut builder = tauri::Builder::default();
@@ -22,20 +49,29 @@ pub fn build_tauri_app() {
 
     // setup, create window
     builder = builder.setup(|app| {
-        create_main_window(&app);
+        create_a_window(
+            &app.app_handle(),
+            app_data::MAIN_WINDOW,
+            app_data::URL,
+        );
         Ok(())
     });
 
     // run
     builder
+        .invoke_handler(tauri::generate_handler![
+            open_new_window,
+            download_file,
+            open_browser,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
-fn create_main_window(app: &App) {
+fn create_a_window(app: &AppHandle, label: &str, url: &str) {
     let app_config = AppConfig::load();
-    let url = WindowUrl::App(PathBuf::from(app_data::URL));
-    let mut builder = WindowBuilder::new(app, app_data::MAIN_WINDOW, url);
+    let window_url = WindowUrl::App(PathBuf::from(url));
+    let mut builder = WindowBuilder::new(app, label, window_url);
 
     builder = builder.initialization_script(generated::INIT_SCRIPT);
 
