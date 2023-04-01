@@ -9,22 +9,22 @@ Convert any web page into a desktop app (but, lightweight ~3MB)
 
 #### macOS
 
-    ```bash
-    # cargo
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-    ```
+```bash
+# cargo
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
 
 #### Linux
 
 -   Given example is for Ubuntu, but it should work for other distros as well with respective packages.
 
-    ```bash
-    # cargo
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```bash
+# cargo
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-    # webkit2gtk
-    sudo apt install libwebkit2gtk-4.0-dev -y
-    ```
+# webkit2gtk
+sudo apt install libwebkit2gtk-4.0-dev -y
+```
 
 #### Windows
 
@@ -34,32 +34,32 @@ Windows Setup (x64)
 
 ### Install
 
-    ```bash
-    cargo install web2app tauri-cli
-    ```
+```bash
+cargo install web2app tauri-cli
+```
 
 ### Usages
 
-    ```bash
-    # Run with args
+```bash
+# Run with args
 
-    web2app args -n Notion -u https://www.notion.so -i icon.png
-    ```
+web2app args -n Notion -u https://www.notion.so -i icon.png
+```
 
-    ```bash
-    # Run with interactive mode
+```bash
+# Run with interactive mode
 
-    web2app interactive
+web2app interactive
 
-    # 🍀 Enter Name (TestApp):
-    # 🍀 Enter URL (https://trello.com):
-    # 🍀 Enter Description (An example application.):
-    # 🍀 Enter Version (0.1.0):
-    # 🍀 Enter Author (John Doe):
-    # 🍀 Enter Identifier (com.example.testapp):
-    # 🍀 Enter Icon (icon_path.png):
-    # 🍀 Enter User Agent (Mozilla/5.0):
-    ```
+# 🍀 Enter Name (TestApp):
+# 🍀 Enter URL (https://trello.com):
+# 🍀 Enter Description (An example application.):
+# 🍀 Enter Version (0.1.0):
+# 🍀 Enter Author (John Doe):
+# 🍀 Enter Identifier (com.example.testapp):
+# 🍀 Enter Icon (icon_path.png):
+# 🍀 Enter User Agent (Mozilla/5.0):
+```
 
 ### Output
 
