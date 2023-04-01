@@ -73,13 +73,11 @@ web2app interactive
 -   [x] Custom User Agent
 -   [x] Desktop Notification (working for some apps)
 -   [ ] Back and forward navigation
--   [ ] File download support
--   [ ] Github Action to build binary
--   [ ] Separate `web2app_apps` repo to host common built apps through Github Action
--   [ ] Retain window size and position after restart
 -   [ ] Automatically fetch icon from website
--   [ ] Docs in crates.io
 -   [ ] Dark Reader Extension (already there but, not fully working)
+-   [ ] Retain window size and position after restart
+-   [ ] Separate `web2app_apps` repo to host common built apps through Github Action
+-   [ ] File download support
 
 ### Libraries
 
