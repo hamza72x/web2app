@@ -93,3 +93,16 @@ setTimeout(async () => {
 		Notification.permission = "denied";
 	}
 }, 1000);
+
+// listen all clicks
+document.addEventListener("click", (e) => {
+	console.log("the target", e.target.tagName);
+	if (e.target.tagName === "A") {
+		// if it's _blank, open in new window
+		e.preventDefault();
+		if (e.target.target === "_blank") {
+			console.log("opening in new window", e.target.href);
+			invoke("open_new_window", { url: e.target.href });
+		}
+	}
+});

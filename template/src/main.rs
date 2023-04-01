@@ -8,9 +8,9 @@ extern crate objc;
 mod app_config;
 mod app_data;
 mod app_menu;
-mod util;
-mod generated;
 mod builder;
+mod generated;
+mod util;
 
 fn main() {
     builder::build_tauri_app();
