@@ -72,7 +72,7 @@ web2app interactive
 -   [x] Standard Copy/Paste
 -   [x] Custom User Agent
 -   [x] Desktop Notification (working for some apps)
--   [ ] Back and forward navigation
+-   [x] Back and forward navigation
 -   [ ] Automatically fetch icon from website
 -   [ ] Dark Reader Extension (already there but, not fully working)
 -   [ ] Retain window size and position after restart

@@ -27,56 +27,12 @@ const JS_DISABLE_DARK_READER: &str = r#"
 "#;
 
 // build_menu creates a tauri::Menu
-pub fn build_menu(app_config: &AppConfig) -> Menu {
-    // file sub menu
-    let file_submenu =
-        Submenu::new("File", Menu::new().add_native_item(MenuItem::Quit));
-
-    // edit sub menu
-    let edit_submenu = Submenu::new(
-        "Edit",
-        Menu::new()
-            .add_native_item(MenuItem::Copy)
-            .add_native_item(MenuItem::Cut)
-            .add_native_item(MenuItem::Paste)
-            .add_native_item(MenuItem::SelectAll)
-            .add_native_item(MenuItem::Undo)
-            .add_native_item(MenuItem::Redo),
-    );
-
-    // window sub menu
-    let reload = CustomMenuItem::new("reload".to_string(), "Reload")
-        .accelerator("CmdOrCtrl+R");
-    let zoom_in = CustomMenuItem::new("zoom_in".to_string(), "Zoom In")
-        .accelerator("CmdOrCtrl+Plus");
-    let zoom_out = CustomMenuItem::new("zoom_out".to_string(), "Zoom Out")
-        .accelerator("CmdOrCtrl+-");
-    let window_submenu = Submenu::new(
-        "Window",
-        Menu::new()
-            .add_native_item(MenuItem::Minimize)
-            .add_item(zoom_in)
-            .add_item(zoom_out)
-            .add_item(reload),
-    );
-
-    // tools sub menu
-    let dark_reader = CustomMenuItem::new(
-        "dark_reader".to_string(),
-        app_config.dark_reader_text(),
-    )
-    .accelerator("CmdOrCtrl+Shift+I");
-    let tools_submenu =
-        Submenu::new("Tools", Menu::new().add_item(dark_reader));
-
-    // main menu
-    let menu = Menu::new()
-        .add_submenu(file_submenu)
-        .add_submenu(edit_submenu)
-        .add_submenu(window_submenu)
-        .add_submenu(tools_submenu);
-
-    menu
+pub fn build_menu() -> Menu {
+    return Menu::new()
+        .add_submenu(get_file_submenu())
+        .add_submenu(get_edit_submenu())
+        .add_submenu(get_window_submenu())
+        .add_submenu(get_tools_submenu());
 }
 
 pub fn handle_menu_click(window: &Window, menu_id: &str) {
@@ -120,8 +76,70 @@ pub fn handle_menu_click(window: &Window, menu_id: &str) {
                     .expect("failed to set dark reader menu text");
             });
         }
+        "back" => {
+            window.eval("window.history.back();").unwrap();
+        }
+        "forward" => {
+            window.eval("window.history.forward();").unwrap();
+        }
         _ => {
             println!("unhandled menu click: {}", menu_id);
         }
     }
+}
+
+// File
+fn get_file_submenu() -> Submenu {
+    return Submenu::new("File", Menu::new().add_native_item(MenuItem::Quit));
+}
+
+// Edit
+fn get_edit_submenu() -> Submenu {
+    return Submenu::new(
+        "Edit",
+        Menu::new()
+            .add_native_item(MenuItem::Copy)
+            .add_native_item(MenuItem::Cut)
+            .add_native_item(MenuItem::Paste)
+            .add_native_item(MenuItem::SelectAll)
+            .add_native_item(MenuItem::Undo)
+            .add_native_item(MenuItem::Redo),
+    );
+}
+
+// Window
+fn get_window_submenu() -> Submenu {
+    let reload = CustomMenuItem::new("reload".to_string(), "Reload")
+        .accelerator("CmdOrCtrl+R");
+    let zoom_in = CustomMenuItem::new("zoom_in".to_string(), "Zoom In")
+        .accelerator("CmdOrCtrl+Plus");
+    let zoom_out = CustomMenuItem::new("zoom_out".to_string(), "Zoom Out")
+        .accelerator("CmdOrCtrl+-");
+    let back = CustomMenuItem::new("back".to_string(), "Back".to_string())
+        .accelerator("CmdOrCtrl+[");
+    let forward =
+        CustomMenuItem::new("forward".to_string(), "Forward".to_string())
+            .accelerator("CmdOrCtrl+]");
+
+    return Submenu::new(
+        "Window",
+        Menu::new()
+            .add_native_item(MenuItem::Minimize)
+            .add_item(zoom_in)
+            .add_item(zoom_out)
+            .add_item(back)
+            .add_item(forward)
+            .add_item(reload),
+    );
+}
+
+// Tools
+fn get_tools_submenu() -> Submenu {
+    let dark_reader = CustomMenuItem::new(
+        "dark_reader".to_string(),
+        "Enable Dark Reader".to_string(),
+    )
+    .accelerator("CmdOrCtrl+Shift+I");
+
+    return Submenu::new("Tools", Menu::new().add_item(dark_reader));
 }

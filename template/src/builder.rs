@@ -11,7 +11,7 @@ use tauri::Manager;
 use tauri::WindowBuilder;
 use tauri::WindowUrl;
 
-// handlers
+// handlers, js -> rust
 
 // open new window handler
 #[tauri::command]
@@ -42,7 +42,7 @@ pub fn build_tauri_app() {
     let mut builder = tauri::Builder::default();
 
     // menu
-    builder = builder.menu(app_menu::build_menu(&AppConfig::default()));
+    builder = builder.menu(app_menu::build_menu());
     builder = builder.on_menu_event(|event| {
         app_menu::handle_menu_click(event.window(), event.menu_item_id());
     });
