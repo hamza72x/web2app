@@ -13,6 +13,7 @@ serde_json = "1.0.94"
 serde = "1.0.154"
 tauri = { version = "1.2", features = ["notification-all", "shell-open"] }
 reqwest = { version = "0.11", features = ["blocking", "json"] }
+webkit2gtk = "0.18.0"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 objc = "0.2.7"
