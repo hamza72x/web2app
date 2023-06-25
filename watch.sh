@@ -11,22 +11,29 @@ build_mod() {
     echo "// Then keep running watch.sh" >>$template_mod
     echo "" >>$template_mod
 
+    os=$(uname -s)
+    opts=""
+
+    if [ "$os" = "Linux" ]; then
+        opts="-w0"
+    fi
+
     # dir: template/src
-    echo "pub const FILE_APP_CONFIG_RS: &str = \"$(cat template/src/app_config.rs | base64)\";" >>$template_mod && echo "" >>$template_mod
-    echo "pub const FILE_APP_DATA_RS: &str = \"$(cat template/src/app_data.rs | base64)\";" >>$template_mod && echo "" >>$template_mod
-    echo "pub const FILE_APP_MENU_RS: &str = \"$(cat template/src/app_menu.rs | base64)\";" >>$template_mod && echo "" >>$template_mod
+    echo "pub const FILE_APP_CONFIG_RS: &str = \"$(cat template/src/app_config.rs | base64 $opts)\";" >>$template_mod && echo "" >>$template_mod
+    echo "pub const FILE_APP_DATA_RS: &str = \"$(cat template/src/app_data.rs | base64 $opts)\";" >>$template_mod && echo "" >>$template_mod
+    echo "pub const FILE_APP_MENU_RS: &str = \"$(cat template/src/app_menu.rs | base64 $opts)\";" >>$template_mod && echo "" >>$template_mod
 
-    echo "pub const FILE_BUILDER_RS: &str = \"$(cat template/src/builder.rs | base64)\";" >>$template_mod && echo "" >>$template_mod
-    echo "pub const FILE_GENERATED_RS: &str = \"$(cat template/src/generated.rs | base64)\";" >>$template_mod && echo "" >>$template_mod
+    echo "pub const FILE_BUILDER_RS: &str = \"$(cat template/src/builder.rs | base64 $opts)\";" >>$template_mod && echo "" >>$template_mod
+    echo "pub const FILE_GENERATED_RS: &str = \"$(cat template/src/generated.rs | base64 $opts)\";" >>$template_mod && echo "" >>$template_mod
 
-    echo "pub const FILE_MAIN_RS: &str = \"$(cat template/src/main.rs | base64)\";" >>$template_mod && echo "" >>$template_mod
-    echo "pub const FILE_UTIL_RS: &str = \"$(cat template/src/util.rs | base64)\";" >>$template_mod && echo "" >>$template_mod
+    echo "pub const FILE_MAIN_RS: &str = \"$(cat template/src/main.rs | base64 $opts)\";" >>$template_mod && echo "" >>$template_mod
+    echo "pub const FILE_UTIL_RS: &str = \"$(cat template/src/util.rs | base64 $opts)\";" >>$template_mod && echo "" >>$template_mod
 
     # dir: template
-    echo "pub const FILE_BUILD_RS: &str = \"$(cat template/build.rs | base64)\";" >>$template_mod && echo "" >>$template_mod
-    echo "pub const FILE_CARGO_TOML: &str = \"$(cat template/Cargo.toml | base64)\";" >>$template_mod && echo "" >>$template_mod
-    echo "pub const FILE_CARGO_LOCK: &str = \"$(cat template/Cargo.lock | base64)\";" >>$template_mod && echo "" >>$template_mod
-    echo "pub const FILE_TAURI_CONF_JSON: &str = \"$(cat template/tauri.conf.json | base64)\";" >>$template_mod && echo "" >>$template_mod
+    echo "pub const FILE_BUILD_RS: &str = \"$(cat template/build.rs | base64 $opts)\";" >>$template_mod && echo "" >>$template_mod
+    echo "pub const FILE_CARGO_TOML: &str = \"$(cat template/Cargo.toml | base64 $opts)\";" >>$template_mod && echo "" >>$template_mod
+    echo "pub const FILE_CARGO_LOCK: &str = \"$(cat template/Cargo.lock | base64 $opts)\";" >>$template_mod && echo "" >>$template_mod
+    echo "pub const FILE_TAURI_CONF_JSON: &str = \"$(cat template/tauri.conf.json | base64 $opts)\";" >>$template_mod && echo "" >>$template_mod
 }
 
 build_template_gen() {
