@@ -135,15 +135,14 @@ impl Args {
 
 pub struct FileBuildData<'a> {
     pub file: File,
-    pub data_b64: &'a str,
+    pub data: &'a str,
     // map if search and replace text
     pub search_replace_texts: Option<HashMap<String, String>>,
 }
 
 impl FileBuildData<'_> {
     pub fn decode_and_write(&mut self) {
-        let data = base64::decode(&self.data_b64).unwrap();
-        let mut data = String::from_utf8(data).unwrap();
+        let mut data = self.data.to_string();
         if let Some(search_replace_texts) = &self.search_replace_texts {
             for (key, value) in search_replace_texts {
                 data = data.replace(key.as_str(), value);
