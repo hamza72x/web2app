@@ -2,6 +2,12 @@
 
 # this watch.sh requires bash 4.0 or higher
 # `brew install bash` on macos
+bash_version=$(bash --version | head -n 1 | awk '{print $4}')
+
+echo ""
+echo "bash version is $bash_version -----------------------"
+echo "watch.sh requires bash 4.0 or higher ----------------"
+echo ""
 
 build_mod() {
     template_mod="src/generated.rs"

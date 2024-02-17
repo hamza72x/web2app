@@ -1,7 +1,7 @@
 [package]
 name = "web2app"
 description = "Turn any web page into a desktop app (but, lightweight ~3MB)"
-version = "0.2.9"
+version = "0.2.10"
 edition = "2021"
 license = "MIT"
 
