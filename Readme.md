@@ -16,15 +16,40 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 #### Linux
 
--   Given example is for Ubuntu, but it should work for other distros as well with respective packages.
-
-```bash
-# cargo
+You should first install the Rust toolchain
+```sh
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
 
-# webkit2gtk
+Then you need to install some dependencies, which depends on your Linux distribution.
+
+<details>
+<summary>Ubuntu (and derivates such as KDE Neon, PopOS etc.)</summary>
+
+```sh
 sudo apt install libwebkit2gtk-4.0-dev -y
 ```
+
+</details>
+
+<details>
+<summary>OpenSUSE</summary>
+
+```sh
+sudo zypper in -y webkit2gtk3-soup2-devel
+```
+
+</details>
+
+
+<details>
+<summary>Other</summary>
+
+You need to look for another package that provides the development libraries for webkit with GTK4.
+There might also be other missing packages.
+
+</details>
+
 
 #### Windows
 
