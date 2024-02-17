@@ -1,30 +1,50 @@
 use std::collections::HashMap;
+use std::fmt::format;
 
-use super::consts;
-use super::generated;
 use super::model::Args;
 use super::model::FileBuildData;
 
-pub fn build_template_files(args: &Args) -> [FileBuildData; 11] {
+const FILE_APP_CONFIG_RS: &str = include_str!("../template/src/app_config.rs");
+
+const FILE_APP_DATA_RS: &str = include_str!("../template/src/app_data.rs");
+
+const FILE_APP_MENU_RS: &str = include_str!("../template/src/app_menu.rs");
+
+const FILE_BUILDER_RS: &str = include_str!("../template/src/builder.rs");
+
+const FILE_MAIN_RS: &str = include_str!("../template/src/main.rs");
+
+const FILE_UTIL_RS: &str = include_str!("../template/src/util.rs");
+
+const FILE_BUILD_RS: &str = include_str!("../template/build.rs");
+
+const FILE_CARGO_TOML: &str = include_str!("../template/Cargo.toml");
+
+const FILE_CARGO_LOCK: &str = include_str!("../template/Cargo.lock");
+
+const FILE_TAURI_CONF_JSON: &str = include_str!("../template/tauri.conf.json");
+const TAURI_ICON_ELEMENTS: &str = r#""icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico""#;
+
+pub fn build_template_files(args: &Args) -> [FileBuildData; 10] {
     let files = [
         // template/src/app_config.rs
         FileBuildData {
             file: args.dest_tmpl_file("src/app_config.rs"),
-            data_b64: generated::FILE_APP_CONFIG_RS,
+            data: FILE_APP_CONFIG_RS,
             search_replace_texts: None,
         },
         // template/src/app_menu.rs
         FileBuildData {
             file: args.dest_tmpl_file("src/app_menu.rs"),
-            data_b64: generated::FILE_APP_MENU_RS,
+            data: FILE_APP_MENU_RS,
             search_replace_texts: None,
         },
         // template/src/app_data.rs
         FileBuildData {
             file: args.dest_tmpl_file("src/app_data.rs"),
-            data_b64: generated::FILE_APP_DATA_RS,
+            data: FILE_APP_DATA_RS,
             search_replace_texts: {
-                let mut map = std::collections::HashMap::new();
+                let mut map = HashMap::new();
                 if let Some(user_agent) = &args.user_agent {
                     map.insert(
                         String::from("pub const USER_AGENT: Option<&str> = None;"),
@@ -45,37 +65,38 @@ pub fn build_template_files(args: &Args) -> [FileBuildData; 11] {
         // template/src/builder.rs
         FileBuildData {
             file: args.dest_tmpl_file("src/builder.rs"),
-            data_b64: generated::FILE_BUILDER_RS,
-            search_replace_texts: None,
-        },
-        // template/src/generated.rs
-        FileBuildData {
-            file: args.dest_tmpl_file("src/generated.rs"),
-            data_b64: generated::FILE_GENERATED_RS,
-            search_replace_texts: None,
+            data: FILE_BUILDER_RS,
+            search_replace_texts: {
+                let mut map = HashMap::new();
+                map.insert(
+                    String::from("INIT_SCRIPT_INSERTED_HERE"),
+                    include_str!("../template/src/script.js").to_string(),
+                );
+                Some(map)
+            },
         },
         // template/src/main.rs
         FileBuildData {
             file: args.dest_tmpl_file("src/main.rs"),
-            data_b64: generated::FILE_MAIN_RS,
+            data: FILE_MAIN_RS,
             search_replace_texts: None,
         },
         // template/src/util.rs
         FileBuildData {
             file: args.dest_tmpl_file("src/util.rs"),
-            data_b64: generated::FILE_UTIL_RS,
+            data: FILE_UTIL_RS,
             search_replace_texts: None,
         },
         // template/build.rs
         FileBuildData {
             file: args.dest_tmpl_file("build.rs"),
-            data_b64: generated::FILE_BUILD_RS,
+            data: FILE_BUILD_RS,
             search_replace_texts: None,
         },
         // template/Cargo.toml
         FileBuildData {
             file: args.dest_tmpl_file("Cargo.toml"),
-            data_b64: generated::FILE_CARGO_TOML,
+            data: FILE_CARGO_TOML,
             search_replace_texts: {
                 let mut map = HashMap::new();
                 map.insert(
@@ -96,9 +117,9 @@ pub fn build_template_files(args: &Args) -> [FileBuildData; 11] {
         // template/Cargo.lock
         FileBuildData {
             file: args.dest_tmpl_file("Cargo.lock"),
-            data_b64: generated::FILE_CARGO_LOCK,
+            data: FILE_CARGO_LOCK,
             search_replace_texts: {
-                let mut map = std::collections::HashMap::new();
+                let mut map = HashMap::new();
                 map.insert(
                     String::from("name = \"app_name_lowercased\""),
                     format!("name = \"{}\"", &args.name.to_lowercase()),
@@ -109,9 +130,9 @@ pub fn build_template_files(args: &Args) -> [FileBuildData; 11] {
         // template/tauri.conf.json
         FileBuildData {
             file: args.dest_tmpl_file("tauri.conf.json"),
-            data_b64: generated::FILE_TAURI_CONF_JSON,
+            data: FILE_TAURI_CONF_JSON,
             search_replace_texts: {
-                let mut map = std::collections::HashMap::new();
+                let mut map = HashMap::new();
                 map.insert(
                     String::from("\"productName\": \"app_name\""),
                     format!("\"productName\": \"{}\"", &args.name),
@@ -127,7 +148,7 @@ pub fn build_template_files(args: &Args) -> [FileBuildData; 11] {
                 if args.icon.is_some() {
                     map.insert(
                         String::from("\"icon\": []"),
-                        format!("\"icon\": [{}]", consts::TAURI_ICON_ELEMENTS),
+                        format!("\"icon\": [{}]", TAURI_ICON_ELEMENTS),
                     );
                 }
                 Some(map)
