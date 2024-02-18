@@ -4,10 +4,13 @@ use std::thread::sleep;
 use std::time::Duration;
 
 mod cli;
+mod generated;
 mod input;
 mod model;
 mod template_builder;
 mod util;
+mod consts;
+
 use model::Args;
 
 // milliseconds
