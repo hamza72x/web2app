@@ -3,7 +3,6 @@ use std::path::PathBuf;
 use super::app_config::AppConfig;
 use super::app_data;
 use super::app_menu;
-use super::generated;
 use super::util;
 
 use tauri::AppHandle;
@@ -68,12 +67,14 @@ pub fn build_tauri_app() {
         .expect("error while running tauri application");
 }
 
+const INIT_SCRIPT: &str = r#"INIT_SCRIPT_INSERTED_HERE"#;
+
 fn create_a_window(app: &AppHandle, label: &str, url: &str) {
     let app_config = AppConfig::load();
     let window_url = WindowUrl::App(PathBuf::from(url));
     let mut builder = WindowBuilder::new(app, label, window_url);
 
-    builder = builder.initialization_script(generated::INIT_SCRIPT);
+    builder = builder.initialization_script(INIT_SCRIPT);
 
     if let Some(user_agent) = app_data::USER_AGENT {
         builder = builder.user_agent(user_agent);
