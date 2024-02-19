@@ -70,20 +70,9 @@ impl Args {
     pub fn build_dir(&self) -> String {
         let home_dir = home::home_dir().unwrap().display().to_string();
 
-        let mut path = Path::new(&home_dir).to_path_buf();
-        if std::env::consts::OS == "linux" {
-            // Use XDG_CACHE_HOME
-            if let Ok(custom_data_home) = std::env::var("XDG_CACHE_HOME") {
-                // Use custom XDG_CACHE_HOME set by user
-                path = Path::new(&custom_data_home).to_path_buf();
-            }
-            else {
-                // Default XDG_CACHE_HOME
-                path = path.join(".cache");
-            }
-        }
-        path = path.join("web2app_apps");
-        path = path.join(self.name.to_lowercase());
+        let path = Path::new(&home_dir);
+        let path = path.join("web2app_apps");
+        let path = path.join(self.name.to_lowercase());
 
         path.as_path().display().to_string()
     }
@@ -146,14 +135,15 @@ impl Args {
 
 pub struct FileBuildData<'a> {
     pub file: File,
-    pub data: &'a str,
+    pub data_b64: &'a str,
     // map if search and replace text
     pub search_replace_texts: Option<HashMap<String, String>>,
 }
 
 impl FileBuildData<'_> {
     pub fn decode_and_write(&mut self) {
-        let mut data = self.data.to_string();
+        let data = base64::decode(&self.data_b64).unwrap();
+        let mut data = String::from_utf8(data).unwrap();
         if let Some(search_replace_texts) = &self.search_replace_texts {
             for (key, value) in search_replace_texts {
                 data = data.replace(key.as_str(), value);
