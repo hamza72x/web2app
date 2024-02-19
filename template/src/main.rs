@@ -9,6 +9,7 @@ mod app_config;
 mod app_data;
 mod app_menu;
 mod builder;
+mod generated;
 mod util;
 
 fn main() {
