@@ -60,6 +60,10 @@ Windows Setup (x64)
 ### Install
 
 ```bash
+# downgrade to old rust version
+# a PR to upgrade the rust and tauri version will be welcomed
+rustup default 1.71
+
 cargo install tauri-cli --version '1.6.6'
 
 cargo install web2app
