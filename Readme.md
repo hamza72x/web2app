@@ -60,7 +60,9 @@ Windows Setup (x64)
 ### Install
 
 ```bash
-cargo install web2app tauri-cli
+cargo install tauri-cli --version '1.6.6'
+
+cargo install web2app
 ```
 
 ### Usages
